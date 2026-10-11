@@ -1,0 +1,6 @@
+// Supabase project: big-back (ref iefchnylrxolydtulmgt, us-east-1)
+// The publishable key is client-safe; data access is governed by Row Level Security.
+// Never put the secret / service_role key in the app.
+// xcconfig treats "//" as a comment, so the URL scheme is split with $().
+SUPABASE_URL = https:/$()/iefchnylrxolydtulmgt.supabase.co
+SUPABASE_PUBLISHABLE_KEY = sb_publishable_dl3FnPLwMEY2VAxp7K2h9g_KG1WE65j
