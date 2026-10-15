@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BigBack prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&amp;display=swap">
+<style>
+body{margin:0;background:#141210}
+a{color:#C7360F}a:hover{color:#8F2408}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.snapy{scroll-snap-type:y mandatory;overflow-y:auto;scrollbar-width:none}
+.snapy::-webkit-scrollbar,.scrollx::-webkit-scrollbar,.scrolly::-webkit-scrollbar{display:none}
+.snapitem{scroll-snap-align:start}
+.scrollx{overflow-x:auto;scrollbar-width:none}
+.scrolly{overflow-y:auto;scrollbar-width:none}
+.disp{font-family:'Bricolage Grotesque',system-ui,sans-serif}
+.clip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #FFFFFF; color: #141210; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px">
+
+<!-- ================= FEED ================= -->
+<sc-if value="{{isFeed}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: 0; top: 0; width: 390px; height: 760px; background: #141210">
+  <div style="position: absolute; z-index: 3; left: 0; right: 0; top: 0; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center">
+    <div class="disp" style="font-size: 26px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px">bigback</div>
+    <div style="font-size: 13px; font-weight: 700; color: #141210; background: #FFFFFF; padding: 6px 12px; border-radius: 999px">Following</div>
+  </div>
+  <div class="snapy" style="height: 760px">
+    <sc-for list="{{feed}}" as="p" hint-placeholder-count="3">
+      <article class="snapitem" style="height: 760px; position: relative; background: {{p.tile}}">
+        <div class="disp" aria-hidden="true" style="position: absolute; left: 24px; right: 72px; top: 210px; font-size: 44px; line-height: 1.02; font-weight: 800; color: #141210; opacity: 0.18">{{p.photo}}</div>
+        <div style="position: absolute; left: 20px; top: 470px; font-size: 12px; font-weight: 700; background: #FFFFFF; color: #141210; padding: 4px 10px; border-radius: 999px">Photo · {{p.photo}}</div>
+        <div style="position: absolute; left: 20px; top: 68px; width: 92px; height: 122px; border-radius: 16px; border: 3px solid #FFFFFF; background: {{p.selfie}}; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 700; font-size: 28px">{{p.initial}}</div>
+        <sc-if value="{{p.isLive}}" hint-placeholder-val="{{ true }}">
+          <div style="position: absolute; left: 124px; top: 70px; font-size: 12px; font-weight: 700; background: #141210; color: #FFFFFF; padding: 4px 10px; border-radius: 999px">LIVE at the table</div>
+        </sc-if>
+        <div style="position: absolute; right: 12px; top: 300px; display: flex; flex-direction: column; gap: 14px; align-items: center">
+          <button onClick="{{p.toggleSave}}" aria-label="Save to Want to Try" style="width: 52px; height: 52px; border-radius: 999px; border: 0; background: {{p.saveBg}}; color: {{p.saveFg}}; display: flex; align-items: center; justify-content: center">
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+          </button>
+          <div style="font-size: 11px; font-weight: 700; color: #141210; margin-top: -10px">{{p.saveLabel}}</div>
+          <button onClick="{{p.goHere}}" aria-label="Go here with friends" style="width: 52px; height: 52px; border-radius: 999px; border: 0; background: #FFFFFF; color: #141210; display: flex; align-items: center; justify-content: center">
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 11a4 4 0 1 0-8 0"/><path d="M3 21a7 7 0 0 1 9-6.7"/><path d="M18 15v6M15 18h6"/></svg>
+          </button>
+          <div style="font-size: 11px; font-weight: 700; color: #141210; margin-top: -10px">Go here</div>
+          <button aria-label="Comments" style="width: 52px; height: 52px; border-radius: 999px; border: 0; background: #FFFFFF; color: #141210; display: flex; align-items: center; justify-content: center">
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+          </button>
+          <div style="font-size: 11px; font-weight: 700; color: #141210; margin-top: -10px">{{p.comments}}</div>
+        </div>
+        <div style="position: absolute; left: 12px; right: 12px; bottom: 12px; background: #141210; color: #FFFFFF; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; gap: 12px; align-items: center">
+            <div style="flex: 1; min-width: 0">
+              <div style="font-size: 13px; color: #D6D1C8">{{p.who}} {{p.withText}} · {{p.time}}</div>
+              <div class="disp clip" style="font-size: 22px; font-weight: 800; margin-top: 2px">{{p.place}}</div>
+            </div>
+            <div style="background: {{p.tierBg}}; color: #141210; border-radius: 16px; padding: 6px 12px; text-align: center; min-width: 64px">
+              <div class="disp" style="font-size: 26px; font-weight: 800; line-height: 1">{{p.score}}</div>
+              <div style="font-size: 11px; font-weight: 700">{{p.tier}}</div>
+            </div>
+          </div>
+          <div style="font-size: 14px; line-height: 1.35">{{p.note}}</div>
+          <sc-if value="{{p.hasVerdict}}" hint-placeholder-val="{{ false }}">
+            <div style="background: #2A2622; border-radius: 14px; padding: 10px 12px; font-size: 13px">
+              <span style="font-weight: 700; color: #FFC21A">Table verdict</span>  {{p.verdict}}
+            </div>
+          </sc-if>
+          <div style="display: flex; gap: 8px; font-size: 12px; font-weight: 700">
+            <span style="background: #2A2622; padding: 4px 10px; border-radius: 999px">{{p.vibe}}</span>
+            <span style="background: #2A2622; padding: 4px 10px; border-radius: 999px">{{p.saves}} saves</span>
+          </div>
+        </div>
+      </article>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= TONIGHT ================= -->
+<sc-if value="{{isTonight}}" hint-placeholder-val="{{ false }}">
+<div class="scrolly" style="position: absolute; left: 0; top: 0; width: 390px; height: 760px; background: #FFFFFF">
+  <div style="padding: 20px 20px 8px">
+    <div style="font-size: 13px; font-weight: 700; color: #6B645B">Waterloo · Thursday night</div>
+    <h1 class="disp" style="margin: 2px 0 0; font-size: 36px; font-weight: 800; letter-spacing: -0.8px">Where we eating?</h1>
+  </div>
+  <div style="padding: 8px 20px 0">
+    <div style="display: flex; gap: 8px; align-items: center; background: #F4F2EE; border-radius: 18px; padding: 6px 6px 6px 14px">
+      <label for="ask" class="sr">Ask BigBack</label>
+      <input id="ask" value="{{askText}}" onChange="{{onAsk}}" placeholder="cheap spicy noodles, open late, 4 of us" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 15px; color: #141210; outline: none; height: 40px">
+      <button onClick="{{submitAsk}}" style="height: 40px; border: 0; border-radius: 14px; background: #141210; color: #FFFFFF; font-weight: 700; font-size: 14px; padding: 0 14px">Ask</button>
+    </div>
+    <sc-if value="{{showAskHints}}" hint-placeholder-val="{{ true }}">
+      <div class="scrollx" style="display: flex; gap: 8px; margin-top: 10px">
+        <sc-for list="{{askHints}}" as="h" hint-placeholder-count="2">
+          <button onClick="{{h.go}}" style="flex: none; border: 1px solid #E4E0D8; background: #FFFFFF; color: #141210; border-radius: 999px; padding: 8px 12px; font-size: 13px">{{h.text}}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{askDone}}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top: 12px; border: 2px solid #141210; border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+          <div style="font-weight: 700; font-size: 14px">For “{{askShown}}”</div>
+          <button onClick="{{clearAsk}}" style="border: 0; background: transparent; color: #6B645B; font-size: 13px; padding: 4px">Clear</button>
+        </div>
+        <sc-for list="{{askResults}}" as="r" hint-placeholder-count="2">
+          <div style="display: flex; gap: 12px; align-items: center">
+            <div style="width: 52px; height: 52px; border-radius: 14px; background: {{r.tile}}; flex: none"></div>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-weight: 700" class="clip">{{r.n}}</div>
+              <div style="font-size: 13px">{{r.why}}</div>
+              <div style="font-size: 12px; color: #6B645B">{{r.proof}}</div>
+            </div>
+            <button onClick="{{r.go}}" style="border: 0; background: #FF4A1C; color: #141210; font-weight: 700; border-radius: 12px; padding: 10px 12px">Go</button>
+          </div>
+        </sc-for>
+        <div style="font-size: 11px; color: #6B645B">BigBack AI · only uses places and ratings from people you follow</div>
+      </div>
+    </sc-if>
+  </div>
+  <div style="padding: 16px 20px 0">
+    <a href="#" onClick="{{openDecide}}" style="display: flex; align-items: center; gap: 14px; text-decoration: none; background: #FF4A1C; color: #141210; border-radius: 22px; padding: 16px">
+      <div style="display: flex">
+        <sc-for list="{{crew}}" as="c" hint-placeholder-count="3">
+          <div style="width: 34px; height: 34px; border-radius: 999px; background: {{c.bg}}; border: 2px solid #FF4A1C; margin-right: -10px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 700; font-size: 13px">{{c.i}}</div>
+        </sc-for>
+      </div>
+      <div style="flex: 1; margin-left: 8px">
+        <div class="disp" style="font-size: 20px; font-weight: 800">Let’s eat</div>
+        <div style="font-size: 13px; font-weight: 500">Swipe with the roommates. First match wins.</div>
+      </div>
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+  <div class="scrollx" style="display: flex; gap: 8px; padding: 16px 20px 4px">
+    <sc-for list="{{cravings}}" as="c" hint-placeholder-count="4">
+      <button onClick="{{c.pick}}" style="flex: none; border: 0; border-radius: 999px; padding: 9px 14px; font-size: 14px; font-weight: 700; background: {{c.bg}}; color: {{c.fg}}">{{c.label}}</button>
+    </sc-for>
+  </div>
+  <div style="padding: 8px 20px 24px; display: flex; flex-direction: column; gap: 12px">
+    <div style="font-size: 13px; font-weight: 700; color: #6B645B">PICKS FOR RIGHT NOW</div>
+    <sc-for list="{{picks}}" as="k" hint-placeholder-count="3">
+      <div style="border-radius: 22px; overflow: hidden; background: #F4F2EE">
+        <div style="height: 120px; background: {{k.tile}}; position: relative">
+          <div style="position: absolute; left: 12px; bottom: 10px; font-size: 12px; font-weight: 700; background: #FFFFFF; padding: 4px 10px; border-radius: 999px">Photo · {{k.dish}}</div>
+          <div style="position: absolute; right: 12px; top: 12px; background: #141210; color: #FFFFFF; border-radius: 14px; padding: 6px 10px; text-align: center">
+            <div class="disp" style="font-size: 20px; font-weight: 800; line-height: 1">{{k.pred}}</div>
+            <div style="font-size: 10px; font-weight: 700">for you</div>
+          </div>
+        </div>
+        <div style="padding: 12px 14px; display: flex; gap: 10px; align-items: center">
+          <div style="flex: 1; min-width: 0">
+            <div class="disp clip" style="font-size: 19px; font-weight: 800">{{k.n}}</div>
+            <div style="font-size: 13px; margin-top: 2px">{{k.reason}}</div>
+            <div style="font-size: 12px; color: #6B645B; margin-top: 2px">{{k.meta}}</div>
+          </div>
+          <button onClick="{{k.go}}" style="border: 0; background: #141210; color: #FFFFFF; font-weight: 700; border-radius: 14px; padding: 12px 14px">Go</button>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= CAMERA / LIVE MEAL ================= -->
+<sc-if value="{{isCamera}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: #0E0D0C; color: #FFFFFF; display: flex; flex-direction: column">
+  <div style="padding: 16px 16px 10px; display: flex; align-items: center; gap: 10px">
+    <button onClick="{{closeCamera}}" aria-label="Close camera" style="width: 44px; height: 44px; border-radius: 999px; border: 0; background: #2A2622; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div style="flex: 1; min-width: 0">
+      <div style="font-size: 12px; font-weight: 700; color: #FF8A6B">● LIVE · 0:42</div>
+      <div class="disp clip" style="font-size: 19px; font-weight: 800">Kinkaku Izakaya</div>
+    </div>
+    <div style="font-size: 12px; background: #2A2622; padding: 6px 10px; border-radius: 999px">with Maya, Ari</div>
+  </div>
+  <div style="position: relative; margin: 0 16px; height: 430px; border-radius: 28px; background: {{camBigBg}}">
+    <div style="position: absolute; left: 16px; bottom: 16px; font-size: 12px; font-weight: 700; background: #FFFFFF; color: #141210; padding: 4px 10px; border-radius: 999px">{{camBigLabel}}</div>
+    <div style="position: absolute; left: 14px; top: 14px; width: 96px; height: 128px; border-radius: 18px; border: 3px solid #FFFFFF; background: {{camSmallBg}}; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; box-sizing: border-box">
+      <span style="font-size: 10px; font-weight: 700; background: #FFFFFF; color: #141210; padding: 2px 6px; border-radius: 999px">{{camSmallLabel}}</span>
+    </div>
+    <button onClick="{{swapCam}}" aria-label="Swap cameras" style="position: absolute; right: 14px; top: 14px; width: 44px; height: 44px; border-radius: 999px; border: 0; background: #FFFFFF; color: #141210; display: flex; align-items: center; justify-content: center">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>
+    </button>
+    <sc-if value="{{showOrder}}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; left: 10px; right: 10px; bottom: 10px; background: #FFFFFF; color: #141210; border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div class="disp" style="font-size: 18px; font-weight: 800">What to order here</div>
+          <button onClick="{{toggleOrder}}" style="border: 0; background: #F4F2EE; border-radius: 999px; padding: 6px 12px; font-weight: 700">Close</button>
+        </div>
+        <sc-for list="{{orderList}}" as="o" hint-placeholder-count="3">
+          <div style="display: flex; gap: 10px; align-items: center">
+            <div style="width: 40px; height: 40px; border-radius: 12px; background: {{o.tile}}; flex: none"></div>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-weight: 700">{{o.dish}}</div>
+              <div style="font-size: 12px; color: #6B645B">{{o.who}}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+  <div class="scrollx" style="display: flex; gap: 8px; padding: 12px 16px 0">
+    <sc-for list="{{moments}}" as="m" hint-placeholder-count="5">
+      <button onClick="{{m.pick}}" style="flex: none; border: 0; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700; background: {{m.bg}}; color: {{m.fg}}">{{m.label}}</button>
+    </sc-for>
+  </div>
+  <sc-if value="{{needsDish}}" hint-placeholder-val="{{ false }}">
+    <div style="padding: 10px 16px 0">
+      <div style="font-size: 12px; color: #D6D1C8; margin-bottom: 6px">What’s that? Tap a dish (from this spot’s menu)</div>
+      <div class="scrollx" style="display: flex; gap: 8px">
+        <sc-for list="{{dishChips}}" as="d" hint-placeholder-count="4">
+          <button onClick="{{d.pick}}" style="flex: none; border: 1px solid #FFFFFF; background: transparent; color: #FFFFFF; border-radius: 999px; padding: 7px 12px; font-size: 13px">{{d.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 24px 0">
+    <button onClick="{{toggleOrder}}" style="width: 88px; border: 0; background: #2A2622; color: #FFFFFF; border-radius: 16px; padding: 10px 6px; font-size: 12px; font-weight: 700">What to order</button>
+    <button onClick="{{snap}}" aria-label="Take photo with both cameras" style="width: 82px; height: 82px; border-radius: 999px; border: 5px solid #FFFFFF; background: #FF4A1C"></button>
+    <button onClick="{{toggleTake}}" style="width: 88px; border: 0; background: {{takeBg}}; color: {{takeFg}}; border-radius: 16px; padding: 10px 6px; font-size: 12px; font-weight: 700">{{takeLabel}}</button>
+  </div>
+  <div style="margin-top: auto; padding: 0 16px 20px; display: flex; gap: 10px; align-items: center">
+    <div class="scrollx" style="flex: 1; display: flex; gap: 6px; min-width: 0">
+      <sc-if value="{{noSnaps}}" hint-placeholder-val="{{ true }}">
+        <div style="font-size: 12px; color: #D6D1C8">No snaps yet. Both cameras fire at once.</div>
+      </sc-if>
+      <sc-for list="{{snaps}}" as="s" hint-placeholder-count="0">
+        <div style="flex: none; width: 44px; height: 56px; border-radius: 10px; background: {{s.tile}}; border: 2px solid #FFFFFF; position: relative" title="{{s.label}}"></div>
+      </sc-for>
+    </div>
+    <button onClick="{{endMeal}}" style="border: 0; background: #FFFFFF; color: #141210; border-radius: 16px; padding: 14px 16px; font-weight: 700">Done · rate it</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= ACTIVITY ================= -->
+<sc-if value="{{isActivity}}" hint-placeholder-val="{{ false }}">
+<div class="scrolly" style="position: absolute; left: 0; top: 0; width: 390px; height: 760px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+  <h1 class="disp" style="margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.8px">Activity</h1>
+  <div style="background: #FFC21A; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+    <div style="font-size: 13px; font-weight: 700">INVITE · FRI 8:00 PM</div>
+    <div class="disp" style="font-size: 22px; font-weight: 800">Sam wants Campus Pizza</div>
+    <div style="font-size: 13px">Maya and Ari are going · 2 friends RSVP’d from the link</div>
+    <div style="display: flex; gap: 8px">
+      <sc-for list="{{inviteOpts}}" as="o" hint-placeholder-count="3">
+        <button onClick="{{o.pick}}" style="flex: 1; border: 0; border-radius: 14px; padding: 12px 0; font-weight: 700; background: {{o.bg}}; color: {{o.fg}}">{{o.label}}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="font-size: 13px; font-weight: 700; color: #6B645B">TO RATE</div>
+  <div style="display: flex; gap: 12px; align-items: center; background: #F4F2EE; border-radius: 20px; padding: 12px">
+    <div style="width: 56px; height: 56px; border-radius: 14px; background: #3E7C59; flex: none"></div>
+    <div style="flex: 1">
+      <div style="font-weight: 700">Lazeez Shawarma</div>
+      <div style="font-size: 13px; color: #6B645B">Yesterday · 3 snaps · 1 quick take</div>
+    </div>
+    <button onClick="{{rateLazeez}}" style="border: 0; background: #141210; color: #FFFFFF; border-radius: 14px; padding: 12px 14px; font-weight: 700">Rate</button>
+  </div>
+  <div style="font-size: 13px; font-weight: 700; color: #6B645B">CHALLENGE</div>
+  <div style="border: 2px solid #141210; border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 8px">
+    <div style="font-weight: 700">Your #1 Late Night is under attack</div>
+    <div style="font-size: 14px">3 people you follow rank Mozy’s above Gol’s Lanzhou Noodle.</div>
+    <sc-if value="{{notDefended}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; gap: 8px">
+        <button onClick="{{defendKeep}}" style="flex: 1; border: 0; background: #E9B44C; color: #141210; border-radius: 14px; padding: 12px 0; font-weight: 700">Keep Gol’s</button>
+        <button onClick="{{defendSwitch}}" style="flex: 1; border: 0; background: #B5543A; color: #FFFFFF; border-radius: 14px; padding: 12px 0; font-weight: 700">Mozy’s wins</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{defended}}" hint-placeholder-val="{{ false }}">
+      <div style="font-size: 14px; font-weight: 700">{{defendText}}</div>
+    </sc-if>
+  </div>
+  <div style="font-size: 13px; font-weight: 700; color: #6B645B">EARLIER</div>
+  <sc-for list="{{activityFeed}}" as="a" hint-placeholder-count="3">
+    <div style="display: flex; gap: 12px; align-items: center">
+      <div style="width: 40px; height: 40px; border-radius: 999px; background: {{a.bg}}; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none">{{a.i}}</div>
+      <div style="font-size: 14px">{{a.text}}</div>
+    </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<!-- ================= YOU ================= -->
+<sc-if value="{{isYou}}" hint-placeholder-val="{{ false }}">
+<div class="scrolly" style="position: absolute; left: 0; top: 0; width: 390px; height: 760px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; gap: 14px; align-items: center">
+    <div style="width: 64px; height: 64px; border-radius: 999px; background: #141210; color: #FFFFFF; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center">Y</div>
+    <div>
+      <div class="disp" style="font-size: 24px; font-weight: 800">@you</div>
+      <div style="font-size: 13px; color: #6B645B">UWaterloo · certified big back</div>
+    </div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+    <div style="background: #F4F2EE; border-radius: 16px; padding: 12px"><div class="disp" style="font-size: 24px; font-weight: 800">{{placeCount}}</div><div style="font-size: 12px">places</div></div>
+    <div style="background: #F4F2EE; border-radius: 16px; padding: 12px"><div class="disp" style="font-size: 24px; font-weight: 800">7%</div><div style="font-size: 12px">of Waterloo eaten</div></div>
+    <div style="background: #F4F2EE; border-radius: 16px; padding: 12px"><div class="disp" style="font-size: 24px; font-weight: 800">4 wk</div><div style="font-size: 12px">new-spot streak</div></div>
+  </div>
+  <div class="scrollx" style="display: flex; gap: 8px">
+    <sc-for list="{{youVibes}}" as="v" hint-placeholder-count="4">
+      <button onClick="{{v.pick}}" style="flex: none; border: 0; border-radius: 999px; padding: 9px 14px; font-size: 14px; font-weight: 700; background: {{v.bg}}; color: {{v.fg}}">{{v.label}}</button>
+    </sc-for>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{myList}}" as="r" hint-placeholder-count="5">
+      <div style="display: flex; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid #E4E0D8">
+        <div class="disp" style="width: 24px; font-size: 18px; font-weight: 800; color: #6B645B">{{r.rank}}</div>
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: {{r.tile}}; flex: none"></div>
+        <div style="flex: 1; min-width: 0">
+          <div style="font-weight: 700" class="clip">{{r.n}}</div>
+          <div style="font-size: 12px; color: #6B645B">{{r.vibe}} · {{r.tierLabel}}</div>
+        </div>
+        <div class="disp" style="background: {{r.bg}}; border-radius: 12px; padding: 6px 10px; font-size: 18px; font-weight: 800">{{r.score}}</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= LET'S EAT (group swipe) ================= -->
+<sc-if value="{{isDecide}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: #FFFFFF; z-index: 20; display: flex; flex-direction: column; padding: 16px 20px 24px; box-sizing: border-box; gap: 14px">
+  <div style="display: flex; align-items: center; gap: 10px">
+    <button onClick="{{closeOverlay}}" aria-label="Close" style="width: 44px; height: 44px; border-radius: 999px; border: 0; background: #F4F2EE; display: flex; align-items: center; justify-content: center">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141210" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div style="flex: 1">
+      <div class="disp" style="font-size: 22px; font-weight: 800">Let’s eat · Roommates</div>
+      <div style="font-size: 13px; color: #6B645B">4 swiping · under $20 · tonight</div>
+    </div>
+  </div>
+  <div style="font-size: 12px; font-weight: 700; color: #6B645B">CARD {{deckPos}} OF {{deckLen}} · picked so nobody hates it</div>
+  <div style="flex: 1; border-radius: 28px; background: {{card.tile}}; position: relative; overflow: hidden">
+    <div class="disp" aria-hidden="true" style="position: absolute; left: 20px; right: 20px; top: 60px; font-size: 46px; line-height: 1; font-weight: 800; color: #141210; opacity: 0.18">{{card.dish}}</div>
+    <div style="position: absolute; left: 14px; right: 14px; bottom: 14px; background: #FFFFFF; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px">
+        <div class="disp" style="font-size: 24px; font-weight: 800">{{card.n}}</div>
+        <div style="background: #141210; color: #FFFFFF; border-radius: 14px; padding: 6px 10px; text-align: center">
+          <div class="disp" style="font-size: 20px; font-weight: 800; line-height: 1">{{card.group}}</div>
+          <div style="font-size: 10px; font-weight: 700">group</div>
+        </div>
+      </div>
+      <div style="font-size: 14px">{{card.line}}</div>
+      <div style="font-size: 13px; font-weight: 700; color: #6B645B">{{card.likes}}</div>
+    </div>
+  </div>
+  <div style="display: flex; gap: 12px">
+    <button onClick="{{deckNo}}" style="flex: 1; height: 64px; border-radius: 22px; border: 2px solid #141210; background: #FFFFFF; color: #141210; font-size: 18px; font-weight: 800" class="disp">Nah</button>
+    <button onClick="{{deckYes}}" style="flex: 1; height: 64px; border-radius: 22px; border: 0; background: #FF4A1C; color: #141210; font-size: 18px; font-weight: 800" class="disp">I’m down</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= PLAN / MATCH ================= -->
+<sc-if value="{{isPlan}}" hint-placeholder-val="{{ false }}">
+<div class="scrolly" style="position: absolute; inset: 0; background: #FFFFFF; z-index: 20; padding: 16px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <button onClick="{{closeOverlay}}" aria-label="Close" style="width: 44px; height: 44px; border-radius: 999px; border: 0; background: #F4F2EE; display: flex; align-items: center; justify-content: center">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141210" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div style="font-size: 13px; font-weight: 700; color: #6B645B">{{planKicker}}</div>
+  </div>
+  <div style="border-radius: 28px; background: {{planTile}}; height: 190px; position: relative">
+    <div class="disp" style="position: absolute; left: 18px; bottom: 16px; right: 18px; font-size: 40px; line-height: 0.95; font-weight: 800; color: #141210">{{planTitle}}</div>
+  </div>
+  <div class="disp" style="font-size: 26px; font-weight: 800">{{planPlace}}</div>
+  <div style="font-size: 14px; color: #3D3832">{{planNote}}</div>
+  <div style="display: flex; gap: 8px">
+    <sc-for list="{{times}}" as="t" hint-placeholder-count="4">
+      <button onClick="{{t.pick}}" style="flex: 1; border: 0; border-radius: 14px; padding: 12px 0; font-weight: 700; background: {{t.bg}}; color: {{t.fg}}">{{t.label}}</button>
+    </sc-for>
+  </div>
+  <div style="font-size: 13px; font-weight: 700; color: #6B645B">WHO’S COMING</div>
+  <sc-for list="{{guests}}" as="g" hint-placeholder-count="4">
+    <div style="display: flex; gap: 12px; align-items: center">
+      <div style="width: 40px; height: 40px; border-radius: 999px; background: {{g.bg}}; color: #FFFFFF; font-weight: 700; display: flex; align-items: center; justify-content: center">{{g.i}}</div>
+      <div style="flex: 1; font-weight: 700">{{g.name}}</div>
+      <div style="font-size: 13px; font-weight: 700; background: #F4F2EE; padding: 6px 10px; border-radius: 999px">{{g.rsvp}}</div>
+    </div>
+  </sc-for>
+  <div style="display: flex; gap: 8px">
+    <sc-for list="{{rsvpOpts}}" as="o" hint-placeholder-count="3">
+      <button onClick="{{o.pick}}" style="flex: 1; border: 0; border-radius: 14px; padding: 12px 0; font-weight: 700; background: {{o.bg}}; color: {{o.fg}}">{{o.label}}</button>
+    </sc-for>
+  </div>
+  <button onClick="{{copyLink}}" style="border: 0; background: #141210; color: #FFFFFF; border-radius: 18px; padding: 16px; font-weight: 700; font-size: 15px">{{linkLabel}}</button>
+  <div style="font-size: 12px; color: #6B645B; text-align: center">Friends without BigBack can RSVP from the link.</div>
+</div>
+</sc-if>
+
+<!-- ================= RATE ================= -->
+<sc-if value="{{isRate}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: #FFFFFF; z-index: 30; display: flex; flex-direction: column; padding: 16px 20px 24px; box-sizing: border-box; gap: 14px">
+  <div style="display: flex; align-items: center; gap: 10px">
+    <button onClick="{{closeOverlay}}" aria-label="Close" style="width: 44px; height: 44px; border-radius: 999px; border: 0; background: #F4F2EE; display: flex; align-items: center; justify-content: center">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141210" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div style="flex: 1; font-size: 13px; font-weight: 700; color: #6B645B">{{rateKicker}}</div>
+  </div>
+
+  <sc-if value="{{stepReaction}}" hint-placeholder-val="{{ true }}">
+    <h2 class="disp" style="margin: 0; font-size: 34px; line-height: 1; font-weight: 800; letter-spacing: -0.6px">How was {{ratePlace}}?</h2>
+    <div style="font-size: 14px; color: #3D3832">One tap gets you a score. No waiting for 10 places.</div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 6px">
+      <sc-for list="{{tierOpts}}" as="t" hint-placeholder-count="4">
+        <button onClick="{{t.pick}}" style="height: 150px; border: 0; border-radius: 24px; background: {{t.bg}}; color: #141210; text-align: left; padding: 16px; display: flex; flex-direction: column; justify-content: space-between">
+          <span class="disp" style="font-size: 26px; font-weight: 800">{{t.label}}</span>
+          <span style="font-size: 13px; font-weight: 700">{{t.band}}</span>
+        </button>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{stepVibe}}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <div style="background: {{tierBg}}; border-radius: 18px; padding: 10px 14px; text-align: center">
+        <div class="disp" style="font-size: 30px; font-weight: 800; line-height: 1">{{instantScore}}</div>
+        <div style="font-size: 11px; font-weight: 700">instant score</div>
+      </div>
+      <div style="font-size: 14px">{{tierLabel}}. Now tell us what kind of spot it is, so it only gets compared to its own kind.</div>
+    </div>
+    <h2 class="disp" style="margin: 0; font-size: 28px; font-weight: 800">What’s the vibe?</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px">
+      <sc-for list="{{vibeOpts}}" as="v" hint-placeholder-count="6">
+        <button onClick="{{v.pick}}" style="border: 0; border-radius: 999px; padding: 12px 16px; font-size: 15px; font-weight: 700; background: {{v.bg}}; color: {{v.fg}}">{{v.label}}</button>
+      </sc-for>
+    </div>
+    <button onClick="{{toTot}}" style="margin-top: auto; border: 0; background: #141210; color: #FFFFFF; border-radius: 18px; padding: 18px; font-weight: 700; font-size: 16px">{{totCta}}</button>
+  </sc-if>
+
+  <sc-if value="{{stepTot}}" hint-placeholder-val="{{ false }}">
+    <h2 class="disp" style="margin: 0; font-size: 28px; font-weight: 800">This or that? <span style="color: #6B645B; font-size: 18px">{{totRound}} of 3 max</span></h2>
+    <button onClick="{{pickNew}}" style="height: 280px; width: 100%; flex: none; border: 0; border-radius: 26px; background: {{rateTile}}; position: relative; text-align: left; padding: 0">
+      <span style="position: absolute; left: 14px; top: 14px; font-size: 12px; font-weight: 700; background: #FFFFFF; color: #141210; padding: 4px 10px; border-radius: 999px">Your snap · tonight</span>
+      <span class="disp" style="position: absolute; left: 14px; right: 14px; bottom: 14px; background: #FFFFFF; color: #141210; border-radius: 18px; padding: 12px 14px; font-size: 22px; font-weight: 800">{{ratePlace}}</span>
+    </button>
+    <button onClick="{{pickOld}}" style="height: 280px; width: 100%; flex: none; border: 0; border-radius: 26px; background: {{opp.tile}}; position: relative; text-align: left; padding: 0">
+      <span style="position: absolute; left: 14px; top: 14px; font-size: 12px; font-weight: 700; background: #FFFFFF; color: #141210; padding: 4px 10px; border-radius: 999px">Your snap · {{opp.when}}</span>
+      <span class="disp" style="position: absolute; left: 14px; right: 14px; bottom: 14px; background: #FFFFFF; color: #141210; border-radius: 18px; padding: 12px 14px; font-size: 22px; font-weight: 800">{{opp.n}}</span>
+    </button>
+    <div style="display: flex; gap: 10px">
+      <button onClick="{{pickTie}}" style="flex: 1; border: 2px solid #141210; background: #FFFFFF; border-radius: 16px; padding: 12px 0; font-weight: 700">Too close</button>
+      <button onClick="{{pickSkip}}" style="flex: 1; border: 0; background: #F4F2EE; border-radius: 16px; padding: 12px 0; font-weight: 700">Rank later</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{stepPayoff}}" hint-placeholder-val="{{ false }}">
+    <div style="background: {{tierBg}}; border-radius: 26px; padding: 18px">
+      <div style="font-size: 13px; font-weight: 700">{{payoffKicker}}</div>
+      <div class="disp" style="font-size: 38px; line-height: 1; font-weight: 800; margin-top: 4px">New #{{rankNum}} in {{vibe}}</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <sc-for list="{{payoffList}}" as="r" hint-placeholder-count="4">
+        <div style="display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 14px; background: {{r.rowBg}}">
+          <div class="disp" style="width: 22px; font-weight: 800">{{r.rank}}</div>
+          <div style="width: 34px; height: 34px; border-radius: 10px; background: {{r.tile}}; flex: none"></div>
+          <div style="flex: 1; font-weight: 700; min-width: 0" class="clip">{{r.n}}</div>
+          <div class="disp" style="font-weight: 800; font-size: 18px">{{r.score}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="border: 2px solid #141210; border-radius: 22px; padding: 14px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; text-align: center">
+      <div><div class="disp" style="font-size: 22px; font-weight: 800">{{myScore}}</div><div style="font-size: 11px; font-weight: 700">You</div></div>
+      <div><div class="disp" style="font-size: 22px; font-weight: 800">8.1</div><div style="font-size: 11px; font-weight: 700">Following · 5</div></div>
+      <div><div class="disp" style="font-size: 22px; font-weight: 800">8.6</div><div style="font-size: 11px; font-weight: 700">UW · 140</div></div>
+      <div><div class="disp" style="font-size: 22px; font-weight: 800; color: #C7360F">6.2</div><div style="font-size: 11px; font-weight: 700">Maya</div></div>
+    </div>
+    <div style="font-size: 13px; color: #3D3832; text-align: center">Maya disagrees. Settle it in the comments.</div>
+    <button onClick="{{postIt}}" style="margin-top: auto; border: 0; background: #FF4A1C; color: #141210; border-radius: 18px; padding: 18px; font-weight: 800; font-size: 17px" class="disp">Post to followers</button>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ================= TAB BAR ================= -->
+<sc-if value="{{showTabs}}" hint-placeholder-val="{{ true }}">
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: #FFFFFF; border-top: 1px solid #E4E0D8; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; padding-bottom: 6px; box-sizing: border-box; z-index: 10">
+  <button onClick="{{goFeed}}" style="border: 0; background: transparent; color: {{tabFeedFg}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; height: 56px; justify-content: center">
+    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 17h6"/></svg>Feed
+  </button>
+  <button onClick="{{goTonight}}" style="border: 0; background: transparent; color: {{tabTonightFg}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; height: 56px; justify-content: center">
+    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2 1-3 4-3 7h3"/></svg>Tonight
+  </button>
+  <div style="display: flex; justify-content: center">
+    <button onClick="{{goCamera}}" aria-label="Start a meal" style="width: 60px; height: 60px; border-radius: 22px; border: 0; background: #FF4A1C; color: #141210; display: flex; align-items: center; justify-content: center; margin-top: -10px">
+      <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+    </button>
+  </div>
+  <button onClick="{{goActivity}}" style="border: 0; background: transparent; color: {{tabActivityFg}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; height: 56px; justify-content: center; position: relative">
+    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg>Activity
+    <span style="position: absolute; top: 6px; right: 18px; width: 9px; height: 9px; border-radius: 999px; background: #FF4A1C"></span>
+  </button>
+  <button onClick="{{goYou}}" style="border: 0; background: transparent; color: {{tabYouFg}}; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; height: 56px; justify-content: center">
+    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>You
+  </button>
+</nav>
+</sc-if>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+  <div role="status" style="position: absolute; left: 20px; right: 20px; top: 16px; z-index: 50; background: #141210; color: #FFFFFF; border-radius: 16px; padding: 12px 14px; font-size: 14px; font-weight: 700">{{toast}}</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tab: "feed", overlay: null, toast: "",
+      saved: {}, posted: null,
+      askText: "", askDone: false, askShown: "",
+      craving: null,
+      deckIndex: 0, planPlace: "", planTile: "#D9792B", planKicker: "", planTitle: "", planNote: "", planTime: "7:30", rsvp: "Going", linkCopied: false,
+      snaps: [], moment: "Food", needsDish: false, quickTake: false, showOrder: false, frontBig: false,
+      rateStep: "reaction", ratePlace: "Kinkaku Izakaya", rateTile: "#D9792B", tier: "loved", vibe: "Late Night",
+      lo: 0, hi: 0, round: 0, rank: 0, unsettled: false,
+      youVibe: "All", inviteRsvp: null, defended: null
+    };
+  }
+
+  tiers() {
+    return [
+      { key: "loved", label: "Loved it", band: "8.0 – 10", low: 8, width: 2, bg: "#FF4A1C", list: [
+        { n: "Gol's Lanzhou Noodle", tile: "#E9B44C", when: "Sep 28", vibe: "Late Night" },
+        { n: "Lazeez Shawarma", tile: "#3E7C59", when: "Oct 2", vibe: "Late Night" },
+        { n: "Gyubee", tile: "#7A4E9E", when: "Sep 21", vibe: "Sit-down" },
+        { n: "Mozy's Shawarma", tile: "#B5543A", when: "Sep 19", vibe: "Late Night" },
+        { n: "Burrito Boyz", tile: "#C4472F", when: "Sep 12", vibe: "Late Night" }
+      ] },
+      { key: "good", label: "Good", band: "6.0 – 7.9", low: 6, width: 2, bg: "#FFC21A", list: [
+        { n: "Shawarma Plus", tile: "#2D5B8C", when: "Oct 5", vibe: "Late Night" },
+        { n: "Mr. Panino's Beijing House", tile: "#D9792B", when: "Sep 30", vibe: "Sit-down" },
+        { n: "Campus Pizza", tile: "#C4472F", when: "Sep 15", vibe: "Late Night" }
+      ] },
+      { key: "mid", label: "Mid", band: "4.0 – 5.9", low: 4, width: 2, bg: "#D9D4CB", list: [
+        { n: "Sweet Dreams Teashop", tile: "#8C6A5B", when: "Oct 1", vibe: "Café" },
+        { n: "Tim Hortons (SLC)", tile: "#9C3D2E", when: "Sep 9", vibe: "Café" }
+      ] },
+      { key: "nah", label: "Nah", band: "0 – 3.9", low: 0, width: 4, bg: "#9FB1C4", list: [
+        { n: "V1 cafeteria fries", tile: "#B9A27A", when: "Sep 8", vibe: "Late Night" }
+      ] }
+    ];
+  }
+
+  tierObj() { return this.tiers().find((t) => t.key === this.state.tier) || this.tiers()[0]; }
+  oppList() { const v = this.state.vibe; return this.tierObj().list.filter((x) => x.vibe === v); }
+  score(t, i, n) { return (t.low + t.width * (1 - (i + 0.5) / n)).toFixed(1); }
+
+  say(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: "" }), 2200);
+  }
+
+  openPlan(place, tile, kicker, title, note) {
+    this.setState({ overlay: "plan", planPlace: place, planTile: tile, planKicker: kicker, planTitle: title, planNote: note, linkCopied: false, rsvp: "Going" });
+  }
+
+  startRate(place, tile) {
+    this.setState({ overlay: "rate", rateStep: "reaction", ratePlace: place, rateTile: tile, tier: "loved", vibe: "Late Night", lo: 0, hi: 0, round: 0 });
+  }
+
+  finalize(rank, unsettled) { this.setState({ rateStep: "payoff", rank: rank, unsettled: unsettled }); }
+
+  choose(newWins) {
+    const s = this.state;
+    const mid = Math.floor((s.lo + s.hi) / 2);
+    let lo = s.lo, hi = s.hi;
+    if (newWins) hi = mid; else lo = mid + 1;
+    const round = s.round + 1;
+    if (lo >= hi) return this.finalize(lo, false);
+    if (round >= 3) return this.finalize(Math.floor((lo + hi) / 2), true);
+    this.setState({ lo: lo, hi: hi, round: round });
+  }
+
+  deckData() {
+    return [
+      { n: "Burrito Boyz", tile: "#C4472F", group: "7.4", line: "Sam’s predicted 5.2 here, might be a no", likes: "Only Ari swiped right", all: false, dish: "carne asada burrito" },
+      { n: "Kinkaku Izakaya", tile: "#D9792B", group: "8.6", line: "On 3 of your Want-to-Try lists · nobody below 7", likes: "Maya, Ari and Sam swiped right", all: true, dish: "karaage + tonkotsu" },
+      { n: "Gol's Lanzhou Noodle", tile: "#E9B44C", group: "8.4", line: "Maya 9.2 last week · about $14 each", likes: "Maya and Ari swiped right", all: false, dish: "hand-pulled noodles" }
+    ];
+  }
+
+  deckAdvance(liked) {
+    const deck = this.deckData();
+    const i = this.state.deckIndex;
+    const c = deck[i];
+    if (liked && c.all) {
+      return this.openPlan(c.n, c.tile, "LET’S EAT · ROOMMATES", "It’s a match!", "All 4 of you swiped right. Pick a time and it’s locked in.");
+    }
+    if (i + 1 >= deck.length) {
+      const best = deck[2];
+      return this.openPlan(best.n, best.tile, "LET’S EAT · ROOMMATES", "Most votes wins", "No unanimous pick, so the spot with the most right-swipes takes it.");
+    }
+    this.setState({ deckIndex: i + 1 });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const set = (o) => () => this.setState(o);
+    const ink = "#141210";
+
+    // ---------- feed ----------
+    const base = [
+      { id: "p1", who: "Maya", initial: "M", selfie: "#5B3E78", withText: "with Ari", time: "2h", place: "Gol's Lanzhou Noodle", score: "9.2", tier: "Loved it", tierBg: "#FF4A1C", vibe: "Late Night", note: "hand-pulled while you watch. the chili oil is a personality trait", photo: "hand-pulled beef noodles", tile: "#E9B44C", saves: "14", comments: "6", isLive: false, hasVerdict: false, verdict: "" },
+      { id: "p2", who: "Ari", initial: "A", selfie: "#2D5B8C", withText: "with Sam, Maya", time: "5h", place: "Kinkaku Izakaya", score: "8.7", tier: "Loved it", tierBg: "#FF4A1C", vibe: "Sit-down", note: "karaage > everything. go with 4+ people and share", photo: "karaage + tonkotsu", tile: "#D9792B", saves: "22", comments: "11", isLive: true, hasVerdict: true, verdict: "Ari 8.7 · Sam 9.1 · Maya 6.0" },
+      { id: "p3", who: "Sam", initial: "S", selfie: "#3E7C59", withText: "solo", time: "1d", place: "Lazeez Shawarma", score: "6.4", tier: "Good", tierBg: "#FFC21A", vibe: "Cheap Eats", note: "on the rocks, extra garlic. midterm fuel.", photo: "chicken on the rocks", tile: "#7FB069", saves: "9", comments: "3", isLive: false, hasVerdict: false, verdict: "" },
+      { id: "p4", who: "Jordan", initial: "J", selfie: "#9C3D2E", withText: "with Maya", time: "2d", place: "Sweet Dreams Teashop", score: "4.8", tier: "Mid", tierBg: "#D9D4CB", vibe: "Café", note: "too sweet even at 50%. vibes were good tho", photo: "brown sugar milk tea", tile: "#C9A68B", saves: "3", comments: "8", isLive: false, hasVerdict: false, verdict: "" }
+    ];
+    const posts = s.posted ? [s.posted].concat(base) : base;
+    const feed = posts.map((p) => {
+      const on = !!s.saved[p.id];
+      return Object.assign({}, p, {
+        saveBg: on ? ink : "#FFFFFF", saveFg: on ? "#FFFFFF" : ink, saveLabel: on ? "Saved" : "Save",
+        toggleSave: () => { const n = Object.assign({}, s.saved); n[p.id] = !on; this.setState({ saved: n }); if (!on) this.say("Saved to Want to Try"); },
+        goHere: () => this.openPlan(p.place, p.tile, "GO HERE", "Who’s down?", "Pick a time and invite people. Friends without the app can RSVP from the link.")
+      });
+    });
+
+    // ---------- tonight ----------
+    const allPicks = [
+      { n: "Kinkaku Izakaya", pred: "8.9", reason: "Ari loved it this week · on your Want-to-Try", meta: "9 min walk · open till 11", tile: "#D9792B", dish: "karaage", tags: ["Date night"] },
+      { n: "Gol's Lanzhou Noodle", pred: "8.6", reason: "Maya 9.2 · 3 people you follow loved it", meta: "12 min walk · open till 1am", tile: "#E9B44C", dish: "beef noodles", tags: ["Noodles", "Late night", "Under $15"] },
+      { n: "Mozy's Shawarma", pred: "8.1", reason: "4 people you follow ranked it · cheap eats", meta: "5 min walk · open till 3am", tile: "#B5543A", dish: "shawarma plate", tags: ["Shawarma", "Late night", "Under $15"] },
+      { n: "Mr. Panino's Beijing House", pred: "7.6", reason: "Ari 8.0 · dan dan noodles are the move", meta: "6 min walk · open till 11:30", tile: "#2D5B8C", dish: "dan dan noodles", tags: ["Noodles", "Under $15"] },
+      { n: "Sweet Dreams Teashop", pred: "6.9", reason: "Trending at UW this week", meta: "4 min walk · open till 12", tile: "#C9A68B", dish: "milk tea", tags: ["Bubble tea", "Under $15"] }
+    ];
+    const picks = allPicks.filter((k) => !s.craving || k.tags.indexOf(s.craving) >= 0).map((k) => Object.assign({}, k, {
+      go: () => this.openPlan(k.n, k.tile, "GO HERE", "Who’s down?", "Pick a time and invite people. Friends without the app can RSVP from the link.")
+    }));
+    const cravings = ["Noodles", "Shawarma", "Late night", "Under $15", "Bubble tea", "Date night"].map((c) => {
+      const on = s.craving === c;
+      return { label: c, bg: on ? ink : "#F4F2EE", fg: on ? "#FFFFFF" : ink, pick: set({ craving: on ? null : c }) };
+    });
+    const askHints = ["cheap spicy noodles open late", "somewhere Maya rated high", "date night under $40"].map((t) => ({ text: t, go: set({ askText: t, askDone: true, askShown: t }) }));
+    const askResults = [
+      { n: "Gol's Lanzhou Noodle", tile: "#E9B44C", why: "Spicy hand-pulled noodles · ~$14 · open till 1am", proof: "Maya 9.2 last week · veg broth tagged by 6 people" },
+      { n: "Mr. Panino's Beijing House", tile: "#2D5B8C", why: "Dan dan noodles · ~$12 · open till 11:30", proof: "Ari 8.0 · 6 min from DC Library" }
+    ].map((r) => Object.assign({}, r, { go: () => this.openPlan(r.n, r.tile, "GO HERE", "Who’s down?", "Pick a time and invite people. Friends without the app can RSVP from the link.") }));
+
+    // ---------- plan ----------
+    const times = ["7:00", "7:30", "8:00", "8:30"].map((t) => {
+      const on = s.planTime === t;
+      return { label: t, bg: on ? ink : "#F4F2EE", fg: on ? "#FFFFFF" : ink, pick: set({ planTime: t }) };
+    });
+    const rsvpOpts = ["Going", "Maybe", "Can’t"].map((r) => {
+      const on = s.rsvp === r;
+      return { label: r, bg: on ? "#FF4A1C" : "#F4F2EE", fg: ink, pick: set({ rsvp: r }) };
+    });
+    const guests = [
+      { i: "Y", name: "You", bg: ink, rsvp: s.rsvp },
+      { i: "M", name: "Maya", bg: "#5B3E78", rsvp: "Going" },
+      { i: "A", name: "Ari", bg: "#2D5B8C", rsvp: "Going" },
+      { i: "S", name: "Sam", bg: "#3E7C59", rsvp: "Maybe" }
+    ];
+
+    // ---------- camera ----------
+    const momentNames = ["Walk-in", "Order", "Food", "Crew", "Damage report"];
+    const momentTiles = { "Walk-in": "#4A4540", "Order": "#C9A68B", "Food": "#D9792B", "Crew": "#5B3E78", "Damage report": "#B9A27A" };
+    const moments = momentNames.map((m) => {
+      const on = s.moment === m;
+      return { label: m, bg: on ? "#FFFFFF" : "#2A2622", fg: on ? ink : "#FFFFFF", pick: set({ moment: m }) };
+    });
+    const dishChips = ["Karaage", "Tonkotsu ramen", "Gyoza", "Takoyaki", "+ New dish"].map((d) => ({
+      label: d,
+      pick: () => {
+        const sn = s.snaps.slice();
+        if (sn.length) sn[sn.length - 1] = Object.assign({}, sn[sn.length - 1], { label: "Food · " + d });
+        this.setState({ snaps: sn, needsDish: false });
+        this.say("Tagged " + d);
+      }
+    }));
+    const orderList = [
+      { dish: "Karaage", who: "Ari’s best thing he ate · 9 of 11 people you follow liked it", tile: "#D9792B" },
+      { dish: "Tonkotsu ramen", who: "Maya liked it · predicted 8.8 for you", tile: "#E9B44C" },
+      { dish: "Takoyaki", who: "Mixed: 3 liked, 2 didn’t", tile: "#B5543A" }
+    ];
+
+    // ---------- rate ----------
+    const t = this.tierObj();
+    const opps = this.oppList();
+    const mid = Math.floor((s.lo + s.hi) / 2);
+    const opp = opps[mid] || opps[0] || { n: "", tile: "#F4F2EE", when: "" };
+    const tierOpts = this.tiers().map((x) => ({
+      label: x.label, band: x.band, bg: x.bg,
+      pick: () => this.setState({ tier: x.key, rateStep: "vibe" })
+    }));
+    const vibeOpts = ["Cheap Eats", "Sit-down", "Date Night", "Late Night", "Café", "Dessert", "Drinks"].map((v) => {
+      const on = s.vibe === v;
+      return { label: v, bg: on ? ink : "#F4F2EE", fg: on ? "#FFFFFF" : ink, pick: set({ vibe: v }) };
+    });
+    const nOpp = opps.length;
+    const inserted = opps.slice();
+    inserted.splice(s.rank, 0, { n: s.ratePlace, tile: s.rateTile, isNew: true });
+    const payoffList = inserted.map((r, i) => ({
+      rank: String(i + 1), n: r.n, tile: r.tile, score: this.score(t, i, inserted.length),
+      rowBg: r.isNew ? t.bg : "#F4F2EE"
+    }));
+    const myScore = this.score(t, s.rank, inserted.length);
+    const instantScore = (t.low + t.width / 2).toFixed(1);
+
+    // ---------- activity ----------
+    const inviteOpts = ["Going", "Maybe", "Can’t"].map((r) => {
+      const on = s.inviteRsvp === r;
+      return { label: r, bg: on ? ink : "#FFFFFF", fg: on ? "#FFFFFF" : ink, pick: set({ inviteRsvp: r }) };
+    });
+    const activityFeed = [
+      { i: "M", bg: "#5B3E78", text: "Maya saved your Gyubee post to Want to Try" },
+      { i: "A", bg: "#2D5B8C", text: "Ari went to Kinkaku from your Want to Try: 8.7" },
+      { i: "J", bg: "#9C3D2E", text: "Jordan started following you" }
+    ];
+
+    // ---------- you ----------
+    const all = [];
+    this.tiers().forEach((x) => x.list.forEach((r, i) => all.push({ n: r.n, tile: r.tile, vibe: r.vibe, tierLabel: x.label, bg: x.bg, score: this.score(x, i, x.list.length) })));
+    if (s.posted) all.push({ n: s.posted.place, tile: s.posted.tile, vibe: s.posted.vibe, tierLabel: s.posted.tier, bg: s.posted.tierBg, score: s.posted.score });
+    all.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
+    const myList = all.filter((r) => s.youVibe === "All" || r.vibe === s.youVibe).map((r, i) => Object.assign({}, r, { rank: String(i + 1) }));
+    const youVibes = ["All", "Late Night", "Sit-down", "Café", "Cheap Eats"].map((v) => {
+      const on = s.youVibe === v;
+      return { label: v, bg: on ? ink : "#F4F2EE", fg: on ? "#FFFFFF" : ink, pick: set({ youVibe: v }) };
+    });
+
+    const overlay = s.overlay;
+    const tabFg = (k) => (s.tab === k ? ink : "#8A8379");
+    const deck = this.deckData();
+
+    return {
+      isFeed: s.tab === "feed", isTonight: s.tab === "tonight", isCamera: s.tab === "camera", isActivity: s.tab === "activity", isYou: s.tab === "you",
+      isDecide: overlay === "decide", isPlan: overlay === "plan", isRate: overlay === "rate",
+      showTabs: !overlay && s.tab !== "camera",
+      tabFeedFg: tabFg("feed"), tabTonightFg: tabFg("tonight"), tabActivityFg: tabFg("activity"), tabYouFg: tabFg("you"),
+      goFeed: set({ tab: "feed" }), goTonight: set({ tab: "tonight" }), goActivity: set({ tab: "activity" }), goYou: set({ tab: "you" }),
+      goCamera: set({ tab: "camera", snaps: [], needsDish: false, showOrder: false, quickTake: false, moment: "Walk-in" }),
+      closeOverlay: set({ overlay: null }),
+      hasToast: !!s.toast, toast: s.toast,
+
+      feed: feed,
+
+      askText: s.askText, askDone: s.askDone, askShown: s.askShown, showAskHints: !s.askDone,
+      onAsk: (e) => this.setState({ askText: e.target.value }),
+      submitAsk: () => { const q = s.askText.trim() || "cheap spicy noodles open late"; this.setState({ askDone: true, askShown: q, askText: q }); },
+      clearAsk: set({ askDone: false, askText: "", askShown: "" }),
+      askHints: askHints, askResults: askResults, cravings: cravings, picks: picks,
+      crew: [{ i: "Y", bg: ink }, { i: "M", bg: "#5B3E78" }, { i: "A", bg: "#2D5B8C" }, { i: "S", bg: "#3E7C59" }],
+      openDecide: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ overlay: "decide", deckIndex: 0 }); },
+
+      card: deck[s.deckIndex], deckPos: String(s.deckIndex + 1), deckLen: String(deck.length),
+      deckYes: () => this.deckAdvance(true), deckNo: () => this.deckAdvance(false),
+
+      planPlace: s.planPlace, planTile: s.planTile, planKicker: s.planKicker, planTitle: s.planTitle, planNote: s.planNote,
+      times: times, guests: guests, rsvpOpts: rsvpOpts,
+      linkLabel: s.linkCopied ? "Link copied. Drop it in the group chat" : "Share invite link",
+      copyLink: () => { this.setState({ linkCopied: true }); this.say("Invite link copied"); },
+
+      closeCamera: set({ tab: "feed" }),
+      camBigBg: s.frontBig ? "#3A332D" : (momentTiles[s.moment] || "#D9792B"),
+      camSmallBg: s.frontBig ? (momentTiles[s.moment] || "#D9792B") : "#3A332D",
+      camBigLabel: s.frontBig ? "Front camera · you" : "Back camera · " + s.moment.toLowerCase(),
+      camSmallLabel: s.frontBig ? "food" : "you",
+      swapCam: set({ frontBig: !s.frontBig }),
+      moments: moments, needsDish: s.needsDish, dishChips: dishChips,
+      showOrder: s.showOrder, toggleOrder: set({ showOrder: !s.showOrder }), orderList: orderList,
+      snap: () => {
+        const sn = s.snaps.concat([{ tile: momentTiles[s.moment] || "#D9792B", label: s.moment }]);
+        this.setState({ snaps: sn, needsDish: s.moment === "Food" });
+        this.say(s.moment === "Damage report" ? "Clean plate. Certified big back." : "Snapped · both cameras");
+      },
+      snaps: s.snaps, noSnaps: s.snaps.length === 0,
+      takeLabel: s.quickTake ? "Take saved" : "Quick take", takeBg: s.quickTake ? "#FFC21A" : "#2A2622", takeFg: s.quickTake ? ink : "#FFFFFF",
+      toggleTake: () => { this.setState({ quickTake: !s.quickTake }); if (!s.quickTake) this.say("Saved: “the karaage is insane”"); },
+      endMeal: () => this.startRate("Kinkaku Izakaya", "#D9792B"),
+
+      rateLazeez: () => this.startRate("Lazeez Shawarma", "#3E7C59"),
+      notDefended: !s.defended, defended: !!s.defended,
+      defendText: s.defended === "keep" ? "Gol’s stays #1. Your followers have been notified." : "Mozy’s is your new #1 Late Night.",
+      defendKeep: set({ defended: "keep" }), defendSwitch: set({ defended: "switch" }),
+      inviteOpts: inviteOpts, activityFeed: activityFeed,
+
+      placeCount: String(all.length), youVibes: youVibes, myList: myList,
+
+      ratePlace: s.ratePlace, rateTile: s.rateTile,
+      rateKicker: s.rateStep === "reaction" ? "RATE · ABOUT 10 SECONDS" : s.rateStep === "vibe" ? "RATE · STEP 2" : s.rateStep === "tot" ? "RATE · STEP 3" : "RANKED",
+      stepReaction: s.rateStep === "reaction", stepVibe: s.rateStep === "vibe", stepTot: s.rateStep === "tot", stepPayoff: s.rateStep === "payoff",
+      tierOpts: tierOpts, vibeOpts: vibeOpts, vibe: s.vibe,
+      tierBg: t.bg, tierLabel: t.label, instantScore: instantScore,
+      totCta: nOpp ? "Compare (up to 3 swipes)" : "First " + s.vibe + " spot. Lock it in",
+      toTot: () => { if (!nOpp) return this.finalize(0, false); this.setState({ rateStep: "tot", lo: 0, hi: nOpp, round: 0 }); },
+      totRound: String(s.round + 1), opp: opp,
+      pickNew: () => this.choose(true), pickOld: () => this.choose(false),
+      pickTie: () => this.finalize(mid, false), pickSkip: () => this.finalize(Math.floor((s.lo + s.hi) / 2), true),
+      rankNum: String(s.rank + 1), payoffList: payoffList, myScore: myScore,
+      payoffKicker: s.unsettled ? t.label + " · " + myScore + " · we’ll fine-tune it later" : t.label + " · " + myScore,
+      postIt: () => {
+        this.setState({
+          overlay: null, tab: "feed",
+          posted: { id: "mine-" + Date.now(), who: "You", initial: "Y", selfie: ink, withText: "with Maya, Ari", time: "now", place: s.ratePlace, score: myScore, tier: t.label, tierBg: t.bg, vibe: s.vibe, note: s.quickTake ? "the karaage is insane" : "", photo: "your snaps from tonight", tile: s.rateTile, saves: "0", comments: "0", isLive: true, hasVerdict: false, verdict: "" }
+        });
+        this.say("Posted to your followers");
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
