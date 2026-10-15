@@ -2,6 +2,7 @@
 
 _Owner direction (2026-10-15):_
 - simple but fun;
+- **not a rainbow**: one brand colour, used with restraint;
 - Apple iOS design best practices;
 - **British racing green** as the accent;
 - minimalism with good motion;
@@ -16,6 +17,7 @@ _Owner direction (2026-10-15):_
 
    The app should feel like it shipped with the iPhone. Native components also get Dynamic Type, Dark Mode, VoiceOver and new OS visuals (e.g. Liquid Glass) for free, and App Review expects them.
 2. **Content is the colour.** Food photos carry the energy. The UI stays quiet: neutral surfaces, one green accent, lots of space.
+   **One hue:** every non-neutral colour in the UI is racing green or one of its tints. No yellow, blue, purple or orange anywhere in the chrome.
 3. **Fun lives in motion and copy, not decoration.** Springy transitions, a satisfying swipe, a score that counts up, a playful one-liner. No gradients, glows or clutter.
 4. **One primary action per screen.** Every screen has one obvious thing to do (snap, rate, go, RSVP), in green.
 5. **Respect the person.**
@@ -33,7 +35,7 @@ _Owner direction (2026-10-15):_
 | `accentPressed` | #00301B | #2F8A5A | Pressed state |
 | `accentSoft` | #E4F0E8 | #12291E | Tinted backgrounds (selected chip, toast) |
 | `onAccent` | #FFFFFF | #04140C | Text/icons on `accent` (contrast ≥ 7:1 light, ≥ 4.5:1 dark) |
-| `celebrate` | #E9A83B | #F2B95A | Used sparingly: streak flame, new #1, confetti |
+| `accentTint` | #3E7C59 · #9CCFB0 | same | Confetti, the live dot, avatar fills when there's no photo. Celebration comes from motion, not a new colour |
 
 ### Surfaces and text: iOS system colours only
 | Use | Token |
@@ -43,7 +45,12 @@ _Owner direction (2026-10-15):_
 | Cards | `secondarySystemGroupedBackground` |
 | Text | `label`, `secondaryLabel`, `tertiaryLabel` |
 | Separators | `separator` |
-| Destructive | `systemRed` (delete, report) |
+| Destructive | `systemRed`, **only** on Delete and Report: iOS users read red as "destructive", so it never decorates |
+
+### Photo stand-ins
+Where a real photo isn't loaded yet (placeholders, avatars without a picture, the prototype), fills come from two
+quiet families: greens (#1F5C3E, #3E7C59, #5E9A76) and warm stone neutrals (#2E2A27, #4A4540, #6B6259, #8C8177,
+#A99E92). Real food photos are the only full-colour content on screen.
 
 ### Reaction tiers
 Each tier is told apart by **label, fill and colour**, never colour alone:
@@ -120,7 +127,7 @@ Motion explains what happened, never just decorates, and every animation is inte
   - The score counts up with `.numericText()`.
   - The "New #2 in Late Night" title arrives with `bouncy`.
 - **Save:** bookmark `symbolEffect(.bounce)`, with `.success` haptic on first save.
-- **It's a match!:** the two candidate cards converge, then a `celebrate`-coloured confetti burst (`PhaseAnimator`, 600 ms, about 20 particles), with `.success` haptic.
+- **It's a match!:** the two candidate cards converge, then a green confetti burst (`accent` + `accentTint`) (`PhaseAnimator`, 600 ms, about 20 particles), with `.success` haptic.
 - **Tab/screen changes:** system defaults only. Don't fight the platform.
 - **Reduce Motion:**
   - springs become 200 ms crossfades;

@@ -58,7 +58,7 @@ button:focus-visible{outline:3px solid #3FA46E;outline-offset:2px}
         <div style="position: absolute; left: 16px; top: 64px; width: 104px; height: 138px; border-radius: 20px; border: 2px solid #FFFFFF; background: {{p.selfie}}; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 32px; font-weight: 700" class="r">{{p.initial}}</div>
         <div class="glassdark" style="position: absolute; left: 132px; top: 64px; color: #FFFFFF; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 999px">Photo · {{p.photo}}</div>
         <sc-if value="{{p.isLive}}" hint-placeholder-val="{{ false }}">
-          <div style="position: absolute; left: 132px; top: 98px; color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: #004225; display: flex; align-items: center; gap: 6px"><span class="livedot" style="width: 6px; height: 6px; border-radius: 999px; background: #7BD8A4"></span>Live at the table</div>
+          <div style="position: absolute; left: 132px; top: 98px; color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; background: #004225; display: flex; align-items: center; gap: 6px"><span class="livedot" style="width: 6px; height: 6px; border-radius: 999px; background: #3FA46E"></span>Live at the table</div>
         </sc-if>
         <div style="position: absolute; right: 14px; top: 380px; display: flex; flex-direction: column; gap: 16px; align-items: center">
           <button onClick="{{p.toggleSave}}" aria-label="{{p.saveAria}}" class="glassdark press" style="width: 48px; height: 48px; border-radius: 999px; border: 0; color: {{p.saveColor}}; display: flex; align-items: center; justify-content: center">
@@ -84,7 +84,7 @@ button:focus-visible{outline:3px solid #3FA46E;outline-offset:2px}
         <div style="position: absolute; left: 16px; right: 16px; top: 712px; color: #FFFFFF; display: flex; flex-direction: column; gap: 8px">
           <div style="font-size: 15px; line-height: 1.35; color: rgba(255,255,255,0.92)">{{p.note}}</div>
           <sc-if value="{{p.hasVerdict}}" hint-placeholder-val="{{ false }}">
-            <div style="font-size: 13px; color: rgba(255,255,255,0.75)"><span style="color: #7BD8A4; font-weight: 700">Table verdict</span> · {{p.verdict}}</div>
+            <div style="font-size: 13px; color: rgba(255,255,255,0.75)"><span style="color: #3FA46E; font-weight: 700">Table verdict</span> · {{p.verdict}}</div>
           </sc-if>
           <div style="font-size: 13px; color: rgba(255,255,255,0.6)">{{p.vibe}} · {{p.saves}} saves · {{p.comments}} comments</div>
         </div>
@@ -187,7 +187,7 @@ button:focus-visible{outline:3px solid #3FA46E;outline-offset:2px}
   <div style="font-size: 13px; color: rgba(60,60,67,0.6); padding: 0 16px 6px; text-transform: uppercase">Invite · Fri 8:00 PM</div>
   <div class="rise" style="background: #FFFFFF; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
     <div style="display: flex; gap: 12px; align-items: center">
-      <div class="photo" style="width: 48px; height: 48px; border-radius: 12px; background-color: #B5543A; flex: none"></div>
+      <div class="photo" style="width: 48px; height: 48px; border-radius: 12px; background-color: #8C8177; flex: none"></div>
       <div style="flex: 1">
         <div style="font-weight: 600">Sam wants Campus Pizza</div>
         <div style="font-size: 15px; color: rgba(60,60,67,0.6)">Maya and Ari are going · 2 RSVP’d from the link</div>
@@ -247,7 +247,7 @@ button:focus-visible{outline:3px solid #3FA46E;outline-offset:2px}
   <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 16px">
     <div style="background: #FFFFFF; border-radius: 12px; padding: 12px"><div class="r" style="font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums">{{placeCount}}</div><div style="font-size: 13px; color: rgba(60,60,67,0.6)">places</div></div>
     <div style="background: #FFFFFF; border-radius: 12px; padding: 12px"><div class="r" style="font-size: 24px; font-weight: 800">7%</div><div style="font-size: 13px; color: rgba(60,60,67,0.6)">of Waterloo</div></div>
-    <div style="background: #FFFFFF; border-radius: 12px; padding: 12px"><div class="r" style="font-size: 24px; font-weight: 800; color: #B87A12">4 wk</div><div style="font-size: 13px; color: rgba(60,60,67,0.6)">streak</div></div>
+    <div style="background: #FFFFFF; border-radius: 12px; padding: 12px"><div class="r" style="font-size: 24px; font-weight: 800; color: #004225">4 wk</div><div style="font-size: 13px; color: rgba(60,60,67,0.6)">streak</div></div>
   </div>
   <div role="tablist" aria-label="Filter by vibe" style="display: flex; background: rgba(118,118,128,0.12); border-radius: 9px; padding: 2px; margin-top: 18px">
     <sc-for list="{{youVibes}}" as="v" hint-placeholder-count="4">
@@ -300,7 +300,7 @@ button:focus-visible{outline:3px solid #3FA46E;outline-offset:2px}
           <sc-if value="{{t.isTonight}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2.2 1-3 4-3 7h3"></path></svg></sc-if>
           <sc-if value="{{t.isActivity}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"></path><path d="M10 21h4"></path></svg></sc-if>
           <sc-if value="{{t.isYou}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"></circle><circle cx="12" cy="10" r="3.2"></circle><path d="M6.2 18.4a7 7 0 0 1 11.6 0"></path></svg></sc-if>
-          <sc-if value="{{t.badge}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 0; right: -2px; width: 8px; height: 8px; border-radius: 999px; background: #FF3B30"></span></sc-if>
+          <sc-if value="{{t.badge}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 0; right: -2px; width: 8px; height: 8px; border-radius: 999px; background: #004225"></span></sc-if>
         </span>
         {{t.label}}
       </button>
@@ -320,8 +320,8 @@ button:focus-visible{outline:3px solid #3FA46E;outline-offset:2px}
       <div style="font-size: 13px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 6px; justify-content: center"><span class="livedot" style="width: 6px; height: 6px; border-radius: 999px; background: #3FA46E"></span>Kinkaku Izakaya · 0:42</div>
     </div>
     <div style="display: flex; padding-top: 8px; width: 44px; justify-content: flex-end">
-      <span class="r" style="width: 26px; height: 26px; border-radius: 999px; background: #5B3E78; border: 2px solid #000; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-right: -8px">M</span>
-      <span class="r" style="width: 26px; height: 26px; border-radius: 999px; background: #2D5B8C; border: 2px solid #000; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">A</span>
+      <span class="r" style="width: 26px; height: 26px; border-radius: 999px; background: #3E7C59; border: 2px solid #000; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-right: -8px">M</span>
+      <span class="r" style="width: 26px; height: 26px; border-radius: 999px; background: #4A4540; border: 2px solid #000; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">A</span>
     </div>
   </div>
 
@@ -491,7 +491,7 @@ button:focus-visible{outline:3px solid #3FA46E;outline-offset:2px}
       <div><div class="r" style="font-size: 22px; font-weight: 800">{{myScore}}</div><div style="font-size: 12px; color: rgba(60,60,67,0.6)">You</div></div>
       <div><div class="r" style="font-size: 22px; font-weight: 800">8.1</div><div style="font-size: 12px; color: rgba(60,60,67,0.6)">Following</div></div>
       <div><div class="r" style="font-size: 22px; font-weight: 800">8.6</div><div style="font-size: 12px; color: rgba(60,60,67,0.6)">UW · 140</div></div>
-      <div><div class="r" style="font-size: 22px; font-weight: 800; color: #B87A12">6.2</div><div style="font-size: 12px; color: rgba(60,60,67,0.6)">Maya</div></div>
+      <div><div class="r" style="font-size: 22px; font-weight: 800">6.2</div><div style="font-size: 12px; color: rgba(60,60,67,0.6)">Maya</div></div>
     </div>
     <button onClick="{{postIt}}" class="press" style="margin-top: auto; height: 50px; border: 0; background: #004225; color: #FFFFFF; border-radius: 999px; font-weight: 600; font-size: 17px">Post to followers</button>
   </sc-if>
@@ -601,11 +601,11 @@ class Component extends DCLogic {
       saved: {}, posted: null,
       askText: "", askDone: false, askShown: "", craving: null,
       deckIndex: 0, dragX: 0, dragging: false, startX: 0, flying: 0,
-      planPlace: "", planTile: "#D9792B", planKicker: "", planTitle: "", planNote: "", planIsMatch: false,
+      planPlace: "", planTile: "#1F5C3E", planKicker: "", planTitle: "", planNote: "", planIsMatch: false,
       planTime: "7:30", rsvp: "Going", linkCopied: false, reserved: false,
       live: false, snaps: [], moment: "Food", reviewing: false, needsDish: false, pickedDish: null,
       showOrder: false, frontBig: false, flashOn: false,
-      rateStep: "reaction", ratePlace: "Kinkaku Izakaya", rateTile: "#D9792B", tier: "loved", vibe: "Late Night",
+      rateStep: "reaction", ratePlace: "Kinkaku Izakaya", rateTile: "#1F5C3E", tier: "loved", vibe: "Late Night",
       lo: 0, hi: 0, round: 0, rank: 0, unsettled: false, shown: 0,
       youVibe: "All", inviteRsvp: null, defended: null
     };
@@ -616,23 +616,23 @@ class Component extends DCLogic {
   tiers() {
     return [
       { key: "loved", label: "Loved it", band: "8 – 10", low: 8.0, high: 10.0, list: [
-        { n: "Gol's Lanzhou Noodle", tile: "#C99A3E", when: "Sep 28", vibe: "Late Night" },
-        { n: "Lazeez Shawarma", tile: "#4E7F5E", when: "Oct 2", vibe: "Late Night" },
-        { n: "Gyubee", tile: "#6E5A8C", when: "Sep 21", vibe: "Sit-down" },
-        { n: "Mozy's Shawarma", tile: "#A55A40", when: "Sep 19", vibe: "Late Night" },
-        { n: "Burrito Boyz", tile: "#B24A36", when: "Sep 12", vibe: "Late Night" }
+        { n: "Gol's Lanzhou Noodle", tile: "#6B6259", when: "Sep 28", vibe: "Late Night" },
+        { n: "Lazeez Shawarma", tile: "#3E7C59", when: "Oct 2", vibe: "Late Night" },
+        { n: "Gyubee", tile: "#4A4540", when: "Sep 21", vibe: "Sit-down" },
+        { n: "Mozy's Shawarma", tile: "#8C8177", when: "Sep 19", vibe: "Late Night" },
+        { n: "Burrito Boyz", tile: "#5E9A76", when: "Sep 12", vibe: "Late Night" }
       ] },
       { key: "good", label: "Good", band: "6 – 7.9", low: 6.0, high: 7.9, list: [
-        { n: "Shawarma Plus", tile: "#3E6A8E", when: "Oct 5", vibe: "Late Night" },
-        { n: "Mr. Panino's Beijing House", tile: "#C77A36", when: "Sep 30", vibe: "Sit-down" },
-        { n: "Campus Pizza", tile: "#B5543A", when: "Sep 15", vibe: "Late Night" }
+        { n: "Shawarma Plus", tile: "#4A4540", when: "Oct 5", vibe: "Late Night" },
+        { n: "Mr. Panino's Beijing House", tile: "#1F5C3E", when: "Sep 30", vibe: "Sit-down" },
+        { n: "Campus Pizza", tile: "#8C8177", when: "Sep 15", vibe: "Late Night" }
       ] },
       { key: "mid", label: "Mid", band: "4 – 5.9", low: 4.0, high: 5.9, list: [
-        { n: "Sweet Dreams Teashop", tile: "#B9937A", when: "Oct 1", vibe: "Café" },
-        { n: "Tim Hortons (SLC)", tile: "#8E3B30", when: "Sep 9", vibe: "Café" }
+        { n: "Sweet Dreams Teashop", tile: "#A99E92", when: "Oct 1", vibe: "Café" },
+        { n: "Tim Hortons (SLC)", tile: "#6B6259", when: "Sep 9", vibe: "Café" }
       ] },
       { key: "nah", label: "Nah", band: "0 – 3.9", low: 0.0, high: 3.9, list: [
-        { n: "V1 cafeteria fries", tile: "#A8936C", when: "Sep 8", vibe: "Late Night" }
+        { n: "V1 cafeteria fries", tile: "#A99E92", when: "Sep 8", vibe: "Late Night" }
       ] }
     ];
   }
@@ -691,9 +691,9 @@ class Component extends DCLogic {
 
   deckData() {
     return [
-      { n: "Burrito Boyz", tile: "#B24A36", group: "7.4", line: "Sam’s predicted 5.2 here, might be a no", likes: "Only Ari swiped right", all: false },
-      { n: "Kinkaku Izakaya", tile: "#C77A36", group: "8.6", line: "On 3 of your Want-to-Try lists · nobody below 7", likes: "Maya, Ari and Sam swiped right", all: true },
-      { n: "Gol's Lanzhou Noodle", tile: "#C99A3E", group: "8.4", line: "Maya 9.2 last week · about $14 each", likes: "Maya and Ari swiped right", all: false }
+      { n: "Burrito Boyz", tile: "#5E9A76", group: "7.4", line: "Sam’s predicted 5.2 here, might be a no", likes: "Only Ari swiped right", all: false },
+      { n: "Kinkaku Izakaya", tile: "#1F5C3E", group: "8.6", line: "On 3 of your Want-to-Try lists · nobody below 7", likes: "Maya, Ari and Sam swiped right", all: true },
+      { n: "Gol's Lanzhou Noodle", tile: "#6B6259", group: "8.4", line: "Maya 9.2 last week · about $14 each", likes: "Maya and Ari swiped right", all: false }
     ];
   }
 
@@ -727,10 +727,10 @@ class Component extends DCLogic {
 
     // ---------- feed ----------
     const base = [
-      { id: "p1", who: "Maya", initial: "M", selfie: "#5B3E78", withText: "with Ari", time: "2h", place: "Gol's Lanzhou Noodle", score: "9.2", tierKey: "loved", tier: "Loved it", vibe: "Late Night", note: "hand-pulled while you watch. the chili oil is a personality trait", photo: "beef noodles", tile: "#C99A3E", saves: "14", comments: "6", isLive: false, hasVerdict: false, verdict: "" },
-      { id: "p2", who: "Ari", initial: "A", selfie: "#2D5B8C", withText: "with Sam, Maya", time: "5h", place: "Kinkaku Izakaya", score: "8.7", tierKey: "loved", tier: "Loved it", vibe: "Sit-down", note: "karaage > everything. go with 4+ people and share", photo: "karaage + tonkotsu", tile: "#C77A36", saves: "22", comments: "11", isLive: true, hasVerdict: true, verdict: "Ari 8.7 · Sam 9.1 · Maya 6.0" },
-      { id: "p3", who: "Sam", initial: "S", selfie: "#3E6A4E", withText: "solo", time: "1d", place: "Lazeez Shawarma", score: "6.4", tierKey: "good", tier: "Good", vibe: "Cheap Eats", note: "on the rocks, extra garlic. midterm fuel.", photo: "chicken on the rocks", tile: "#5E8C5A", saves: "9", comments: "3", isLive: false, hasVerdict: false, verdict: "" },
-      { id: "p4", who: "Jordan", initial: "J", selfie: "#8E3B30", withText: "with Maya", time: "2d", place: "Sweet Dreams Teashop", score: "4.8", tierKey: "mid", tier: "Mid", vibe: "Café", note: "too sweet even at 50%. vibes were good tho", photo: "brown sugar milk tea", tile: "#B9937A", saves: "3", comments: "8", isLive: false, hasVerdict: false, verdict: "" }
+      { id: "p1", who: "Maya", initial: "M", selfie: "#3E7C59", withText: "with Ari", time: "2h", place: "Gol's Lanzhou Noodle", score: "9.2", tierKey: "loved", tier: "Loved it", vibe: "Late Night", note: "hand-pulled while you watch. the chili oil is a personality trait", photo: "beef noodles", tile: "#6B6259", saves: "14", comments: "6", isLive: false, hasVerdict: false, verdict: "" },
+      { id: "p2", who: "Ari", initial: "A", selfie: "#4A4540", withText: "with Sam, Maya", time: "5h", place: "Kinkaku Izakaya", score: "8.7", tierKey: "loved", tier: "Loved it", vibe: "Sit-down", note: "karaage > everything. go with 4+ people and share", photo: "karaage + tonkotsu", tile: "#1F5C3E", saves: "22", comments: "11", isLive: true, hasVerdict: true, verdict: "Ari 8.7 · Sam 9.1 · Maya 6.0" },
+      { id: "p3", who: "Sam", initial: "S", selfie: "#1F5C3E", withText: "solo", time: "1d", place: "Lazeez Shawarma", score: "6.4", tierKey: "good", tier: "Good", vibe: "Cheap Eats", note: "on the rocks, extra garlic. midterm fuel.", photo: "chicken on the rocks", tile: "#5E9A76", saves: "9", comments: "3", isLive: false, hasVerdict: false, verdict: "" },
+      { id: "p4", who: "Jordan", initial: "J", selfie: "#6B6259", withText: "with Maya", time: "2d", place: "Sweet Dreams Teashop", score: "4.8", tierKey: "mid", tier: "Mid", vibe: "Café", note: "too sweet even at 50%. vibes were good tho", photo: "brown sugar milk tea", tile: "#A99E92", saves: "3", comments: "8", isLive: false, hasVerdict: false, verdict: "" }
     ];
     const posts = s.posted ? [s.posted].concat(base) : base;
     const feed = posts.map((p) => {
@@ -738,7 +738,7 @@ class Component extends DCLogic {
       const st = ts(p.tierKey);
       return Object.assign({}, p, {
         badgeBg: st.bg, badgeFg: st.fg, badgeBorder: st.border,
-        saveFill: on ? "currentColor" : "none", saveColor: on ? "#7BD8A4" : "#FFFFFF",
+        saveFill: on ? "currentColor" : "none", saveColor: on ? "#3FA46E" : "#FFFFFF",
         saveAria: on ? "Saved to Want to Try" : "Save to Want to Try",
         toggleSave: () => { const n = Object.assign({}, s.saved); n[p.id] = !on; this.setState({ saved: n }); if (!on) this.say("Saved to Want to Try"); },
         goHere: () => this.openPlan(p.place, p.tile, "Go here", "Who’s down?", "Pick a time and invite people.", false)
@@ -747,11 +747,11 @@ class Component extends DCLogic {
 
     // ---------- tonight ----------
     const allPicks = [
-      { n: "Kinkaku Izakaya", pred: "8.9", reason: "Ari loved it this week · on your Want to Try", meta: "9 min walk · open till 11 · $$", tile: "#C77A36", dish: "karaage", tags: ["Date night"] },
-      { n: "Gol's Lanzhou Noodle", pred: "8.6", reason: "Maya 9.2 · 3 people you follow loved it", meta: "12 min walk · open till 1 am · $", tile: "#C99A3E", dish: "beef noodles", tags: ["Noodles", "Late night", "Under $15"] },
-      { n: "Mozy's Shawarma", pred: "8.1", reason: "4 people you follow ranked it", meta: "5 min walk · open till 3 am · $", tile: "#A55A40", dish: "shawarma plate", tags: ["Shawarma", "Late night", "Under $15"] },
-      { n: "Mr. Panino's Beijing House", pred: "7.6", reason: "Ari 8.0 · dan dan noodles are the move", meta: "6 min walk · open till 11:30 · $", tile: "#3E6A8E", dish: "dan dan noodles", tags: ["Noodles", "Under $15"] },
-      { n: "Sweet Dreams Teashop", pred: "6.9", reason: "Trending at UW this week", meta: "4 min walk · open till 12 · $", tile: "#B9937A", dish: "milk tea", tags: ["Bubble tea", "Under $15"] }
+      { n: "Kinkaku Izakaya", pred: "8.9", reason: "Ari loved it this week · on your Want to Try", meta: "9 min walk · open till 11 · $$", tile: "#1F5C3E", dish: "karaage", tags: ["Date night"] },
+      { n: "Gol's Lanzhou Noodle", pred: "8.6", reason: "Maya 9.2 · 3 people you follow loved it", meta: "12 min walk · open till 1 am · $", tile: "#6B6259", dish: "beef noodles", tags: ["Noodles", "Late night", "Under $15"] },
+      { n: "Mozy's Shawarma", pred: "8.1", reason: "4 people you follow ranked it", meta: "5 min walk · open till 3 am · $", tile: "#8C8177", dish: "shawarma plate", tags: ["Shawarma", "Late night", "Under $15"] },
+      { n: "Mr. Panino's Beijing House", pred: "7.6", reason: "Ari 8.0 · dan dan noodles are the move", meta: "6 min walk · open till 11:30 · $", tile: "#4A4540", dish: "dan dan noodles", tags: ["Noodles", "Under $15"] },
+      { n: "Sweet Dreams Teashop", pred: "6.9", reason: "Trending at UW this week", meta: "4 min walk · open till 12 · $", tile: "#A99E92", dish: "milk tea", tags: ["Bubble tea", "Under $15"] }
     ];
     const picks = allPicks.filter((k) => !s.craving || k.tags.indexOf(s.craving) >= 0).map((k) => Object.assign({}, k, {
       go: () => this.openPlan(k.n, k.tile, "Go here", "Who’s down?", "Pick a time and invite people.", false)
@@ -761,8 +761,8 @@ class Component extends DCLogic {
       return { label: c, bg: on ? green : "#FFFFFF", fg: on ? "#FFFFFF" : "#000000", pick: set({ craving: on ? null : c }) };
     });
     const askResults = [
-      { n: "Gol's Lanzhou Noodle", tile: "#C99A3E", why: "Spicy hand-pulled noodles · ~$14 · open till 1 am", proof: "Maya 9.2 last week · veg broth tagged by 6 people" },
-      { n: "Mr. Panino's Beijing House", tile: "#3E6A8E", why: "Dan dan noodles · ~$12 · open till 11:30", proof: "Ari 8.0 · 6 min from DC Library" }
+      { n: "Gol's Lanzhou Noodle", tile: "#6B6259", why: "Spicy hand-pulled noodles · ~$14 · open till 1 am", proof: "Maya 9.2 last week · veg broth tagged by 6 people" },
+      { n: "Mr. Panino's Beijing House", tile: "#4A4540", why: "Dan dan noodles · ~$12 · open till 11:30", proof: "Ari 8.0 · 6 min from DC Library" }
     ].map((r) => Object.assign({}, r, { go: () => this.openPlan(r.n, r.tile, "Go here", "Who’s down?", "Pick a time and invite people.", false) }));
 
     // ---------- plan ----------
@@ -776,9 +776,9 @@ class Component extends DCLogic {
     });
     const guestsRaw = [
       { i: "Y", name: "You", bg: green, rsvp: s.rsvp },
-      { i: "M", name: "Maya", bg: "#5B3E78", rsvp: "Going" },
-      { i: "A", name: "Ari", bg: "#2D5B8C", rsvp: "Going" },
-      { i: "S", name: "Sam", bg: "#3E6A4E", rsvp: "Maybe" }
+      { i: "M", name: "Maya", bg: "#3E7C59", rsvp: "Going" },
+      { i: "A", name: "Ari", bg: "#4A4540", rsvp: "Going" },
+      { i: "S", name: "Sam", bg: "#1F5C3E", rsvp: "Maybe" }
     ];
     const guests = guestsRaw.map((g, i) => Object.assign({}, g, {
       border: i ? hair : "0", rsvpColor: g.rsvp === "Going" ? green : "rgba(60,60,67,0.6)"
@@ -786,16 +786,16 @@ class Component extends DCLogic {
 
     // ---------- camera ----------
     const momentNames = ["Walk-in", "Order", "Food", "Crew", "Damage report"];
-    const momentTiles = { "Walk-in": "#4A4540", "Order": "#B9937A", "Food": "#C77A36", "Crew": "#5B3E78", "Damage report": "#A8936C" };
+    const momentTiles = { "Walk-in": "#4A4540", "Order": "#A99E92", "Food": "#1F5C3E", "Crew": "#3E7C59", "Damage report": "#A99E92" };
     const moments = momentNames.map((m) => ({ label: m, color: s.moment === m ? "#FFFFFF" : "rgba(255,255,255,0.45)", pick: set({ moment: m }) }));
     const dishChips = ["Karaage", "Tonkotsu ramen", "Gyoza", "Takoyaki", "+ New"].map((d) => {
       const on = s.pickedDish === d;
       return { label: d, bg: on ? "#3FA46E" : "rgba(255,255,255,0.14)", fg: on ? "#04140C" : "#FFFFFF", pick: set({ pickedDish: d }) };
     });
     const orderList = [
-      { dish: "Karaage", who: "Ari’s best thing he ate · 9 of 11 follows liked it", tile: "#C77A36" },
-      { dish: "Tonkotsu ramen", who: "Maya liked it · predicted 8.8 for you", tile: "#C99A3E" },
-      { dish: "Takoyaki", who: "Mixed: 3 liked, 2 didn’t", tile: "#A55A40" }
+      { dish: "Karaage", who: "Ari’s best thing he ate · 9 of 11 follows liked it", tile: "#1F5C3E" },
+      { dish: "Tonkotsu ramen", who: "Maya liked it · predicted 8.8 for you", tile: "#6B6259" },
+      { dish: "Takoyaki", who: "Mixed: 3 liked, 2 didn’t", tile: "#8C8177" }
     ].map((o, i) => Object.assign({}, o, { border: i ? hair : "0" }));
 
     // ---------- rate ----------
@@ -824,7 +824,7 @@ class Component extends DCLogic {
     }));
     const myScore = this.score(t, s.rank, inserted.length).toFixed(1);
     const instantScore = ((t.low + t.high) / 2).toFixed(1);
-    const confColors = ["#004225", "#3FA46E", "#E9A83B", "#7BD8A4", "#B87A12"];
+    const confColors = ["#004225", "#3FA46E", "#9CCFB0", "#1F5C3E", "#C9E6D4"];
     const confetti = [];
     for (let i = 0; i < 22; i++) {
       confetti.push({ left: ((i * 37) % 100) + "%", color: confColors[i % confColors.length], delay: ((i % 7) * 0.06).toFixed(2) + "s" });
@@ -836,9 +836,9 @@ class Component extends DCLogic {
       return { label: r, bg: on ? green : fill, fg: on ? "#FFFFFF" : "#000000", pick: () => { this.setState({ inviteRsvp: r }); this.say("Sam will see you’re " + r.toLowerCase()); } };
     });
     const activityFeed = [
-      { i: "M", bg: "#5B3E78", text: "Maya saved your Gyubee post" },
-      { i: "A", bg: "#2D5B8C", text: "Ari went to Kinkaku from your Want to Try: 8.7" },
-      { i: "J", bg: "#8E3B30", text: "Jordan started following you" }
+      { i: "M", bg: "#3E7C59", text: "Maya saved your Gyubee post" },
+      { i: "A", bg: "#4A4540", text: "Ari went to Kinkaku from your Want to Try: 8.7" },
+      { i: "J", bg: "#6B6259", text: "Jordan started following you" }
     ].map((a, i) => Object.assign({}, a, { border: i ? hair : "0" }));
 
     // ---------- you ----------
@@ -892,7 +892,7 @@ class Component extends DCLogic {
       submitAsk: () => { const q = s.askText.trim() || "cheap spicy noodles, open late"; this.setState({ askDone: true, askShown: q, askText: q }); },
       clearAsk: set({ askDone: false, askText: "", askShown: "" }),
       askResults: askResults, cravings: cravings, picks: picks, pickCount: String(picks.length),
-      crew: [{ i: "Y", bg: green }, { i: "M", bg: "#5B3E78" }, { i: "A", bg: "#2D5B8C" }, { i: "S", bg: "#3E6A4E" }],
+      crew: [{ i: "Y", bg: green }, { i: "M", bg: "#3E7C59" }, { i: "A", bg: "#4A4540" }, { i: "S", bg: "#1F5C3E" }],
       openDecide: set({ overlay: "decide", deckIndex: 0, dragX: 0, flying: 0 }),
 
       card: deck[s.deckIndex], deckPos: String(s.deckIndex + 1), deckLen: String(deck.length),
@@ -918,8 +918,8 @@ class Component extends DCLogic {
       copyLink: () => { this.setState({ linkCopied: true }); this.say("Invite link copied"); },
       confetti: confetti,
 
-      camBigBg: s.frontBig ? "#2E2A27" : (momentTiles[s.moment] || "#C77A36"),
-      camSmallBg: s.frontBig ? (momentTiles[s.moment] || "#C77A36") : "#2E2A27",
+      camBigBg: s.frontBig ? "#2E2A27" : (momentTiles[s.moment] || "#1F5C3E"),
+      camSmallBg: s.frontBig ? (momentTiles[s.moment] || "#1F5C3E") : "#2E2A27",
       camBigLabel: s.frontBig ? "Front camera · you" : "Back camera · " + s.moment.toLowerCase(),
       camSmallLabel: s.frontBig ? "food" : "you",
       swapCam: set({ frontBig: !s.frontBig }),
@@ -934,14 +934,14 @@ class Component extends DCLogic {
       },
       keep: () => {
         const label = s.moment + (s.pickedDish ? " · " + s.pickedDish : "");
-        this.setState({ snaps: s.snaps.concat([{ tile: momentTiles[s.moment] || "#C77A36", label: label }]), reviewing: false });
+        this.setState({ snaps: s.snaps.concat([{ tile: momentTiles[s.moment] || "#1F5C3E", label: label }]), reviewing: false });
         this.say(s.moment === "Damage report" ? "Clean plate. Respect." : "Added to your meal");
       },
       retake: set({ reviewing: false }),
       snaps: s.snaps, noSnaps: s.snaps.length === 0,
-      endMeal: () => this.startRate("Kinkaku Izakaya", "#C77A36"),
+      endMeal: () => this.startRate("Kinkaku Izakaya", "#1F5C3E"),
 
-      rateLazeez: () => this.startRate("Lazeez Shawarma", "#4E7F5E"),
+      rateLazeez: () => this.startRate("Lazeez Shawarma", "#3E7C59"),
       notDefended: !s.defended, defended: !!s.defended,
       defendText: s.defended === "keep" ? "Gol’s stays #1. Your followers will see it." : "Mozy’s is your new #1 Late Night.",
       defendKeep: set({ defended: "keep" }), defendSwitch: set({ defended: "switch" }),
