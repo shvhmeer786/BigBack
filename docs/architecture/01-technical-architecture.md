@@ -246,7 +246,7 @@ The iOS side codes against a `ReservationProvider` protocol (`.deepLink`, `.phon
 | `push` | `pg_net` webhook on `notifications` insert, plus a cron sweep for retries | APNs alerts + Live Activity updates; quiet hours; sets `pushed_at` |
 | `invite-web` | Public HTTPS (`bigback.app/p/…`, `/d/…`) | Server-rendered RSVP and swipe pages for people without the app; writes guest RSVPs and votes with the service role, keyed by an unguessable code + guest token; Open-in-app banner |
 | `ai-ask` | App (Ask BigBack) | Haiku-tier Claude with read-only tools that call our RPCs as the user; returns place cards; rate-limited via `ai_requests` (§6) |
-| `delete-account` | App | Deletes the user's Storage objects, then calls `delete_my_account()` (App Store 5.1.1(v)) |
+| `delete-account` | App | Deletes the user's Storage objects, then `auth.admin.deleteUser` (cascades to all owned rows), as App Store 5.1.1(v) requires |
 | `reservations` | App (v1.x) | Provider-agnostic availability and booking (OpenTable partner API) |
 | `place-external` | App (optional, §5.3) | Live external rating for the place page; never stored |
 
@@ -352,7 +352,7 @@ The owner asked which open sources, maps and services we can use for real restau
 - **Canada (PIPEDA) + Ontario students:**
   - A privacy policy that names the data we keep: email, photos, rankings, approximate place visits.
   - Consent for contacts upload (optional).
-  - Data is stored in the US (us-east-1), and the policy must say so. Moving to `ca-central-1` would mean a new project before launch; that decision belongs to the owner.
+  - **Data residency (owner decision 2026-10-15: serve Canada and the US):** the primary database stays in `us-east-1`, which is about 15–25 ms from Waterloo/Toronto and close to US co-op cities. PIPEDA allows storage outside Canada as long as it is disclosed in the privacy policy. If a Canadian school, partner or law later requires Canadian storage, add a Supabase read replica in `ca-central-1` (Pro plan), or move Canadian users to a `ca-central-1` project.
 - **Photos:** EXIF/GPS stripped on device; selfies visible only per meal visibility; no face recognition.
 - **Abuse:**
   - Rate limits on RPCs that fan out (tags ≤ 20, Let's eat ≤ 12 people, comparisons ≤ 10 per rating).
@@ -422,7 +422,7 @@ The owner asked which open sources, maps and services we can use for real restau
 1. **Visual theme:** colours, fonts and motion personality. This is the next step.
 2. **AI model:** Haiku 4.5 (as requested) vs Haiku 5.5 (newer and about 10× cheaper).
 3. **Outside reviews:** v1 deep links only (recommended), or pay for a live Google/Yelp rating chip.
-4. **Data region:** keep `us-east-1`, or recreate in `ca-central-1` before launch.
-5. **OSM hours:** accept ODbL share-alike on the hours table (recommended), or curate hours by hand.
+4. ~~Data region~~: decided. Keep `us-east-1`, serving Canada and the US; add a `ca-central-1` read replica if needed.
+5. ~~OSM hours~~: decided (accepted). OSM `opening_hours` go into `place_hours` with source `osm`, with ODbL attribution in the app's About → Data sources screen.
 6. **Repo visibility:** make the repo private.
 7. **Domain** for invite links (e.g. `bigback.app`), and the Apple Developer account, so APNs keys can be created.

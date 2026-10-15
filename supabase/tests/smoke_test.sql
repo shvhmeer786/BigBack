@@ -26,7 +26,7 @@ begin
   select count(*) into n from public.profiles where id in (a, b, c);
   assert n = 3, 'profiles were not created by handle_new_user';
   assert (select school_id from public.profiles where id = a) is not null, 'school not assigned from email domain';
-  ok := ok || 'profiles+school';
+  ok := array_append(ok, 'profiles+school');
 
   insert into public.places (name, location, source, cuisines, tags, price_level, primary_category)
   values ('Smoke Shawarma', extensions.st_setsrid(extensions.st_makepoint(-80.5440, 43.4730), 4326)::extensions.geography, 'admin', '{shawarma}', '{late_night}', 1, 'restaurant')
@@ -52,7 +52,7 @@ begin
   values (m1, a, a || '/' || m1 || '/x_back.jpg', a || '/' || m1 || '/x_front.jpg', 'food', true);
   select * into r from public.submit_rating(m1, 'loved', 'late_night', 0, true, '[]'::jsonb);
   assert r.score = 9.0, format('first loved place should score 9.0, got %s', r.score);
-  ok := ok || 'first-rating=9.0';
+  ok := array_append(ok, 'first-rating=9.0');
 
   insert into public.meals (user_id, place_id, status) values (a, p2, 'unrated') returning id into m2;
   select * into r from public.submit_rating(m2, 'loved', 'late_night', 0, true,
@@ -60,16 +60,16 @@ begin
   assert r.score = 9.5, format('new #1 of 2 should be 9.5, got %s', r.score);
   assert (select score from public.rankings where user_id = a and place_id = p1) = 8.5, 'old #1 should drop to 8.5';
   assert (select count(*) from public.comparisons where user_id = a) = 1, 'comparison not recorded';
-  ok := ok || 'binary-insert+rescore';
+  ok := array_append(ok, 'binary-insert+rescore');
 
   insert into public.meals (user_id, place_id, status) values (a, p3, 'unrated') returning id into m3;
   select * into r from public.submit_rating(m3, 'good', 'cheap_eats', 0, true, '[]'::jsonb);
   assert r.score = 7.0, format('first good place should be 7.0, got %s', r.score);
-  ok := ok || 'tier-bands';
+  ok := array_append(ok, 'tier-bands');
 
   update public.meals set tier = 'nah', score_at_post = 1.0 where id = m3;
   assert (select tier from public.meals where id = m3) = 'good', 'guard trigger let a client overwrite tier';
-  ok := ok || 'meal-guard';
+  ok := array_append(ok, 'meal-guard');
 
   begin
     insert into public.rankings (user_id, place_id, tier, vibe, position) values (a, p4, 'loved', 'cafe', 0);
@@ -77,11 +77,11 @@ begin
   exception when insufficient_privilege or check_violation then
     null;
   end;
-  ok := ok || 'rankings-rls';
+  ok := array_append(ok, 'rankings-rls');
 
   perform public.move_ranking(p1, 'loved', 0);
   assert (select score from public.rankings where user_id = a and place_id = p1) = 9.5, 'move_ranking failed';
-  ok := ok || 'move_ranking';
+  ok := array_append(ok, 'move_ranking');
 
   insert into public.follows (follower_id, followee_id) values (a, b);
   assert (select status from public.follows where follower_id = a and followee_id = b) = 'accepted', 'public follow should auto-accept';
@@ -99,7 +99,7 @@ begin
   assert n = 4, format('alice feed should have 3 own + 1 bob = 4, got %s', n);
   assert exists (select 1 from public.notifications where user_id = a and kind = 'friend_went' and meal_id = mb),
     'friend_went notification missing';
-  ok := ok || 'feed+friend_went';
+  ok := array_append(ok, 'feed+friend_went');
 
   -- ---------- Cara: request to follow private Bob -> cannot see ----------
   perform set_config('request.jwt.claims', json_build_object('sub', c, 'role', 'authenticated')::text, true);
@@ -114,7 +114,7 @@ begin
   perform set_config('request.jwt.claims', json_build_object('sub', c, 'role', 'authenticated')::text, true);
   select count(*) into n from public.meals where user_id = b;
   assert n = 1, 'cara cannot see bob meals after acceptance';
-  ok := ok || 'private-profiles';
+  ok := array_append(ok, 'private-profiles');
 
   -- ---------- Party: Alice tags Bob + Cara at a live meal ----------
   perform set_config('request.jwt.claims', json_build_object('sub', a, 'role', 'authenticated')::text, true);
@@ -127,7 +127,7 @@ begin
   v_bob_meal := public.respond_party_invite(v_party, true);
   assert v_bob_meal is not null, 'accepting a tag should create a meal';
   assert exists (select 1 from public.meals where id = m5), 'party member cannot see host live meal';
-  ok := ok || 'party+tagging';
+  ok := array_append(ok, 'party+tagging');
 
   -- ---------- Let's eat: Alice + Bob swipe ----------
   perform set_config('request.jwt.claims', json_build_object('sub', a, 'role', 'authenticated')::text, true);
@@ -142,7 +142,7 @@ begin
   v_match := public.decide_vote(v_session, v_cand, true);
   assert v_match = v_cand, 'unanimous like should match';
   assert exists (select 1 from public.notifications where user_id = b and kind = 'decide_match'), 'decide_match notification missing';
-  ok := ok || 'lets-eat';
+  ok := array_append(ok, 'lets-eat');
 
   -- ---------- Plans ----------
   perform set_config('request.jwt.claims', json_build_object('sub', a, 'role', 'authenticated')::text, true);
@@ -151,7 +151,7 @@ begin
   perform public.rsvp(v_plan.id, 'going');
   perform set_config('request.jwt.claims', json_build_object('sub', a, 'role', 'authenticated')::text, true);
   assert exists (select 1 from public.notifications where user_id = a and kind = 'plan_rsvp'), 'host not told about rsvp';
-  ok := ok || 'plans+rsvp';
+  ok := array_append(ok, 'plans+rsvp');
 
   -- ---------- Reads ----------
   select count(*) into n from public.tonight_picks(43.4723, -80.5449);
@@ -162,21 +162,30 @@ begin
   select count(*) into n from public.search_places('smoke noodle', 43.4723, -80.5449, 10);
   assert n >= 1, 'search_places found nothing';
   assert public.user_streak(a) >= 1, 'streak should be >= 1';
-  ok := ok || 'reads';
+  ok := array_append(ok, 'reads');
+
+  -- ---------- resolve_place (MapKit result -> our place) ----------
+  assert public.resolve_place('apple-smoke-1', 'Smoke Shawarma', 43.4730, -80.5440) = p1,
+    'resolve_place should match the nearby place with the same name';
+  assert (select apple_place_id from public.places where id = p1) = 'apple-smoke-1', 'apple id not linked';
+  assert public.resolve_place('apple-smoke-1', 'whatever', 0, 0) = p1, 'known apple id should short-circuit';
+  v_cand := public.resolve_place('apple-smoke-2', 'Brand New Dumplings', 43.4800, -80.5300);
+  assert (select source from public.places where id = v_cand) = 'user', 'unknown place should be user-sourced';
+  ok := array_append(ok, 'resolve_place');
 
   -- ---------- Blocks ----------
   perform set_config('request.jwt.claims', json_build_object('sub', c, 'role', 'authenticated')::text, true);
   insert into public.blocks (blocker_id, blocked_id) values (c, a);
   perform set_config('request.jwt.claims', json_build_object('sub', a, 'role', 'authenticated')::text, true);
   assert not exists (select 1 from public.profiles where id = c), 'blocked user still visible';
-  ok := ok || 'blocks';
+  ok := array_append(ok, 'blocks');
 
   -- ---------- Jobs (as postgres) ----------
   execute 'reset role';
   perform public._refresh_place_stats();
   assert exists (select 1 from public.place_stats where place_id = p1), 'place_stats not refreshed';
   perform public._close_stale_meals();
-  ok := ok || 'jobs';
+  ok := array_append(ok, 'jobs');
 
   raise exception 'SMOKE_TEST_PASSED: %', array_to_string(ok, ', ');
 end;

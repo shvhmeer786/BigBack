@@ -1,6 +1,6 @@
 # BigBack: Database Design
 
-_Supabase project `big-back` (`iefchnylrxolydtulmgt`), Postgres 17. Source of truth: `supabase/migrations/`.
+_Supabase project `big-back` (`iefchnylrxolydtulmgt`), Postgres 17, region us-east-1, serving Canadian and US users (see the architecture doc §8 for data residency). Source of truth: `supabase/migrations/`.
 Drafted 2026-10-15. Any deviations made while applying the migrations are logged in `docs/handoff/db-status.md`._
 
 ## 1. Overview
@@ -56,6 +56,7 @@ erDiagram
 ## 3. Key tables
 
 ### profiles
+- **App Review / demo accounts:** `is_demo` (set from `signup_allowlist`, not changeable by clients). Demo accounts are excluded from campus stats and leaderboards. `signup_allowlist` lets specific non-school emails (the App Review account) sign up.
 - **Purpose:** 1:1 with `auth.users`, created by the `on_auth_user_created` trigger.
   - The handle comes from the email local part, de-duplicated.
   - `school_id` comes from the email domain.
@@ -133,7 +134,7 @@ erDiagram
   | 2 | 9.5 | 8.5 |
   | 10 | 9.9 | 8.1 |
 - `comparisons` keeps every This-or-That (source `rate|settle|defend|fight|reorder`), for future ranking models and Food Fight results.
-- `user_similarity` (nightly): Pearson r over shared places, kept only when `n_shared ≥ 5`.
+- `user_similarity` (nightly, upsert-only): Pearson r over shared places, kept only when `n_shared ≥ 5`.
 
 ### plans / plan_guests
 - **Plans:**
@@ -215,7 +216,7 @@ erDiagram
 | `create_decide_session(...)`, `decide_vote(...)`, `decide_finalize(session)` | | Let's eat |
 | `fight_vote(matchup, winner)` | | Food Fights (only if you've eaten at both) |
 | `user_streak(user)`, `leaderboard(season, limit)`, `taste_match(other)` | | Gamification |
-| `delete_my_account()` | | Account deletion (called by the Edge Function after removing Storage files) |
+| _(account deletion)_ | | Not an RPC: the `delete-account` Edge Function deletes Storage files, then calls `auth.admin.deleteUser` (cascades to every owned row) |
 
 ## 6. Storage layout
 ```
