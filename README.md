@@ -12,6 +12,7 @@ follow. Launching at the University of Waterloo.
 | Core experiences: Decide · Capture · Rank (incl. scoring model) | [docs/design/01-core-experiences.md](docs/design/01-core-experiences.md) |
 | AI (Ask BigBack, Claude Haiku 5.5) | [docs/design/02-ai-features.md](docs/design/02-ai-features.md) |
 | **Design system** (HIG, British racing green, motion, camera) | [docs/design/03-design-system.md](docs/design/03-design-system.md) |
+| **Sign up, log in, email verification** | [docs/design/04-sign-up-and-login.md](docs/design/04-sign-up-and-login.md) |
 | **Technical architecture** | [docs/architecture/01-technical-architecture.md](docs/architecture/01-technical-architecture.md) |
 | **Database design** | [docs/architecture/02-database-design.md](docs/architecture/02-database-design.md) |
 | **App Store readiness** | [docs/architecture/03-app-store-readiness.md](docs/architecture/03-app-store-readiness.md) |
@@ -26,8 +27,9 @@ follow. Launching at the University of Waterloo.
 | API URL | `https://iefchnylrxolydtulmgt.supabase.co` |
 | Client key | Publishable key in `ios/Config/Supabase.xcconfig` |
 | Migrations | `supabase/migrations/` (all applied; see [supabase/README.md](supabase/README.md)) |
-| Smoke test | `supabase/tests/smoke_test.sql` (20 checks, passing) |
-| Sign-up | `@uwaterloo.ca` only at launch; students can rank restaurants anywhere |
+| Smoke test | `supabase/tests/smoke_test.sql` (21 checks, passing) |
+| Sign-up | `@uwaterloo.ca` only at launch, by emailed 6-digit code; students can rank restaurants anywhere |
+| Email templates | `supabase/templates/` (sign-up and log-in codes) |
 
 The publishable key is safe to ship in the app. Every table has Row Level Security enabled, and
 access rules are documented in the database design doc. Secret/service-role keys, APNs keys and the AI

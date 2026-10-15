@@ -22,12 +22,13 @@ _Updated 2026-10-15. Everything in `supabase/migrations/` is applied; file names
 | `20261015154339_places_anywhere` | Places store their own country and time zone, so students can rank anywhere and "open now" is right outside Ontario |
 | `20261015155311_advisor_fixes` | Follow/block helpers answer only about the caller; nothing privileged is callable signed-out; every foreign key indexed |
 | `20261015173756_ai_model_haiku_5_5` | `app_config.ai.model` = `claude-haiku-5-5` |
+| `20261015180634_auth_onboarding` | Terms acceptance columns, `is_handle_available`, `complete_onboarding`, `accept_terms`; guard protects `onboarded_at`, terms and `is_demo` |
 
 ## Smoke test: passing
 `supabase/tests/smoke_test.sql` runs as three fake UW students and always rolls back. Last run (2026-10-15) passed
-all 20 checks:
+all 21 checks:
 
-`profiles+school, first-rating=9.0, binary-insert+rescore, tier-bands, meal-guard, rankings-rls, move_ranking,
+`profiles+school, onboarding, first-rating=9.0, binary-insert+rescore, tier-bands, meal-guard, rankings-rls, move_ranking,
 feed+friend_went, private-profiles, party+tagging, lets-eat, plans+rsvp, reads, resolve_place, rank-anywhere,
 blocks, privacy-helpers, jobs, local-hours, signup-uw-only`
 
@@ -53,9 +54,10 @@ blocks, privacy-helpers, jobs, local-hours, signup-uw-only`
 - In cloud sessions, every MCP call asks for approval even with `.claude/settings.json` allow rules.
 
 ## Manual dashboard steps (owner)
+- **Email delivery (blocks real sign-ups):** custom SMTP, templates, OTP settings and rate limits are in
+  [docs/design/04-sign-up-and-login.md](../design/04-sign-up-and-login.md#setup-steps). They need the domain first.
 - **Auth → Hooks:** enable **Before User Created** → `public.hook_before_user_created`. This is what limits sign-up to
   `@uwaterloo.ca` (the smoke test checks the function; the hook itself must be switched on in the dashboard).
-- **Auth → Email:** a 6-digit OTP email template with the BigBack name.
 - **Auth:** turn on leaked-password protection, which applies to the App Review demo account's password.
 - **App Review demo account:**
   - add the reviewer email to `signup_allowlist` (school = UW);

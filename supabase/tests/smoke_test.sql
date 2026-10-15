@@ -47,6 +47,24 @@ begin
   perform set_config('request.jwt.claims', json_build_object('sub', a, 'role', 'authenticated')::text, true);
   execute 'set local role authenticated';
 
+  -- ---------- Onboarding: handle check, name/handle/terms, guarded fields ----------
+  assert public.is_handle_available('alice_eats'), 'free handle reported as taken';
+  assert not public.is_handle_available('bob.smoke'), 'taken handle reported as free';
+  assert not public.is_handle_available('admin'), 'reserved handle allowed';
+  assert not public.is_handle_available('no spaces'), 'invalid handle allowed';
+  update public.profiles set onboarded_at = now(), is_demo = true where id = a;
+  assert (select onboarded_at is null and not is_demo from public.profiles where id = a), 'client set guarded profile fields';
+  perform public.complete_onboarding('Alice A', 'alice_eats', '2026-10');
+  assert (select handle = 'alice_eats' and onboarded_at is not null and terms_version = '2026-10'
+          from public.profiles where id = a), 'complete_onboarding did not save';
+  begin
+    perform public.complete_onboarding('Alice A', 'bob.smoke', '2026-10');
+    assert false, 'took another user''s handle';
+  exception when raise_exception then
+    null;
+  end;
+  ok := array_append(ok, 'onboarding');
+
   insert into public.meals (user_id, place_id) values (a, p1) returning id into m1;
   insert into public.meal_media (meal_id, user_id, back_path, front_path, moment, is_live)
   values (m1, a, a || '/' || m1 || '/x_back.jpg', a || '/' || m1 || '/x_front.jpg', 'food', true);

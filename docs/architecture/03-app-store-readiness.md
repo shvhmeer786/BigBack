@@ -11,6 +11,8 @@ every year._
 |---|---|---|---|
 | **Reviewer can't log in.** Sign-up is limited to @uwaterloo.ca by email code | 2.1 App Completeness: demo account required | `signup_allowlist` lets a reviewer email sign up and sign in **with a password**. Credentials go in the App Review notes. The demo account is flagged `is_demo` and kept out of stats | DB done; add a "Use password" sign-in option for allowlisted accounts in the app |
 | **Reviewer sees an empty app.** They're in Cupertino, far from Waterloo, with no friends | 2.1 / 4.2 Minimum Functionality | The demo account's school is UW. Tonight uses the user's real location (students rank anywhere: home, co-op, trips). Only when we have nothing near them does it fall back to the campus centre, with a banner ("Nothing rated near you yet · Showing Waterloo") and a button to switch back. The demo account follows 3–5 seeded demo users with real posts at real Waterloo places | Seed demo content once places are imported |
+| Users never agreed to content rules | 1.2 User-Generated Content (terms/EULA) | Sign-up step "Make it yours" requires ticking Terms of Use + Community Guidelines (zero tolerance for objectionable content). Stored as `profiles.terms_accepted_at` / `terms_version`; new versions are re-accepted via `accept_terms` | DB done; screens in the prototype ([design/04](../design/04-sign-up-and-login.md)) |
+| Sign-up emails don't arrive | 2.1 App Completeness | Custom SMTP (Resend) with SPF/DKIM/DMARC on our domain; codes, not links, so Microsoft Safe Links can't consume them; tested with a real UW inbox | Needs the domain + SMTP setup ([design/04](../design/04-sign-up-and-login.md)) |
 | UGC without moderation | 1.2 User-Generated Content | Report (post, comment, profile, place) → `reports` table + moderation queue; Block (`blocks`, hides everything both ways); filtering of objectionable text in comments and captions; published contact info in the app and on the support page | DB done; build the report/block UI and a basic word filter; set up a moderation inbox |
 | No account deletion | 5.1.1(v) | Settings → Delete account → the `delete-account` Edge Function removes Storage files and the auth user, cascading to all data | Edge Function to build |
 | Permissions without clear purpose | 5.1.1 | Pre-permission explainer screens in context, plus specific `Info.plist` purpose strings (camera, microphone for clips, location when-in-use, optional Always, photo library add-only, contacts optional) | Copy in the design system §10 |
@@ -43,6 +45,7 @@ every year._
 - [ ] Built with the current Xcode / iOS SDK Apple requires for new submissions; tested on the oldest supported iOS (18) and the latest.
 - [ ] Report and Block reachable from every post, comment and profile.
 - [ ] Delete account reachable in Settings within 2 taps.
+- [ ] Sign-up shows the Terms checkbox; real sign-up emails reach a `@uwaterloo.ca` inbox (custom SMTP live).
 - [ ] Every permission requested in context with a purpose string; the app works if each one is denied.
 - [ ] Dark Mode, Dynamic Type and VoiceOver pass on the core flows.
 - [ ] No placeholder content, no "beta" wording, no dead buttons.

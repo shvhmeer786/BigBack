@@ -45,7 +45,7 @@ _Owner direction (2026-10-15):_
 | Cards | `secondarySystemGroupedBackground` |
 | Text | `label`, `secondaryLabel`, `tertiaryLabel` |
 | Separators | `separator` |
-| Destructive | `systemRed`, **only** on Delete and Report: iOS users read red as "destructive", so it never decorates |
+| Destructive and errors | `systemRed`, **only** on Delete, Report and error messages (#D70015 for text on white, which passes AA). iOS users read red as "destructive / something's wrong", so it never decorates |
 
 ### Photo stand-ins
 Where a real photo isn't loaded yet (placeholders, avatars without a picture, the prototype), fills come from two

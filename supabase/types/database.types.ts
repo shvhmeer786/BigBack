@@ -1684,6 +1684,8 @@ export type Database = {
           notification_prefs: Json
           onboarded_at: string | null
           school_id: string | null
+          terms_accepted_at: string | null
+          terms_version: string | null
           updated_at: string
         }
         Insert: {
@@ -1698,6 +1700,8 @@ export type Database = {
           notification_prefs?: Json
           onboarded_at?: string | null
           school_id?: string | null
+          terms_accepted_at?: string | null
+          terms_version?: string | null
           updated_at?: string
         }
         Update: {
@@ -1712,6 +1716,8 @@ export type Database = {
           notification_prefs?: Json
           onboarded_at?: string | null
           school_id?: string | null
+          terms_accepted_at?: string | null
+          terms_version?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -2190,9 +2196,39 @@ export type Database = {
         }
         Returns: string
       }
+      accept_terms: { Args: { p_terms_version: string }; Returns: undefined }
       can_view_meal: { Args: { p_meal: string }; Returns: boolean }
       can_view_plan: { Args: { p_plan: string }; Returns: boolean }
       can_view_user_content: { Args: { p_author: string }; Returns: boolean }
+      complete_onboarding: {
+        Args: {
+          p_display_name: string
+          p_handle: string
+          p_terms_version: string
+        }
+        Returns: {
+          avatar_path: string | null
+          bio: string | null
+          created_at: string
+          display_name: string
+          handle: string
+          id: string
+          is_demo: boolean
+          is_private: boolean
+          notification_prefs: Json
+          onboarded_at: string | null
+          school_id: string | null
+          terms_accepted_at: string | null
+          terms_version: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_decide_session: {
         Args: {
           p_constraints?: Json
@@ -2338,6 +2374,7 @@ export type Database = {
         Args: { p_followee: string; p_follower: string }
         Returns: boolean
       }
+      is_handle_available: { Args: { p_handle: string }; Returns: boolean }
       is_open_at: {
         Args: { p_at?: string; p_place_id: string; p_tz?: string }
         Returns: boolean
