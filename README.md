@@ -11,8 +11,10 @@ follow. Launching at the University of Waterloo.
 | Beli teardown & research | [docs/research/01-beli-teardown.md](docs/research/01-beli-teardown.md) |
 | Core experiences: Decide · Capture · Rank (incl. scoring model) | [docs/design/01-core-experiences.md](docs/design/01-core-experiences.md) |
 | AI (Ask BigBack, Haiku-tier) | [docs/design/02-ai-features.md](docs/design/02-ai-features.md) |
+| **Design system** (HIG, British racing green, motion, camera) | [docs/design/03-design-system.md](docs/design/03-design-system.md) |
 | **Technical architecture** | [docs/architecture/01-technical-architecture.md](docs/architecture/01-technical-architecture.md) |
 | **Database design** | [docs/architecture/02-database-design.md](docs/architecture/02-database-design.md) |
+| **App Store readiness** | [docs/architecture/03-app-store-readiness.md](docs/architecture/03-app-store-readiness.md) |
 | Database status / migration log | [docs/handoff/db-status.md](docs/handoff/db-status.md) |
 | Clickable prototype (source) | [prototype/Main.dc.html](prototype/Main.dc.html) |
 

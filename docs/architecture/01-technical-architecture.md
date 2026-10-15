@@ -69,7 +69,7 @@ flowchart LR
 
 ```
 BigBack.xcodeproj
-├─ BigBack (app)                    composition root, DI, deep links, push registration
+├─ BigBack (app)                    composition root, DI, deep links, push registration, PrivacyInfo.xcprivacy
 ├─ BigBackWidgets (extension)       Live Activity (meal in progress), home widget, Control Center button
 ├─ BigBackLockCamera (extension)    LockedCameraCapture: snap from lock screen → queued into the live meal
 ├─ BigBackNotificationService (ext) rich push (downloads the photo thumbnail into the notification)
@@ -419,7 +419,7 @@ The owner asked which open sources, maps and services we can use for real restau
 6. **Fast follow:** Food Fights, Sunday Bites, Term Wrapped, widgets, OpenTable in-app slots.
 
 ## 13. Decisions waiting on the owner
-1. **Visual theme:** colours, fonts and motion personality. This is the next step.
+1. ~~Visual theme~~: decided. See [design/03-design-system.md](../design/03-design-system.md) (HIG-native, British racing green, SF Pro + SF Pro Rounded, spring motion).
 2. **AI model:** Haiku 4.5 (as requested) vs Haiku 5.5 (newer and about 10× cheaper).
 3. **Outside reviews:** v1 deep links only (recommended), or pay for a live Google/Yelp rating chip.
 4. ~~Data region~~: decided. Keep `us-east-1`, serving Canada and the US; add a `ca-central-1` read replica if needed.
