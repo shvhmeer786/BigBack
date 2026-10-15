@@ -16,7 +16,7 @@ follow. Launching at the University of Waterloo.
 | **Database design** | [docs/architecture/02-database-design.md](docs/architecture/02-database-design.md) |
 | **App Store readiness** | [docs/architecture/03-app-store-readiness.md](docs/architecture/03-app-store-readiness.md) |
 | Database status / migration log | [docs/handoff/db-status.md](docs/handoff/db-status.md) |
-| Clickable prototype (source) | [prototype/Main.dc.html](prototype/Main.dc.html) |
+| Clickable prototype (source) | [prototype/Main.dc.html](prototype/Main.dc.html) · design board [prototype/DesignSystem.dc.html](prototype/DesignSystem.dc.html) |
 
 ## Backend
 | | |

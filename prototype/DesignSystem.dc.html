@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BigBack design system</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0;background:#F2F2F7}
+*{box-sizing:border-box}
+.r{font-family:ui-rounded,"SF Pro Rounded","Nunito",-apple-system,system-ui,sans-serif}
+.cap{font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:rgba(60,60,67,.6);margin:0 0 10px}
+.card{background:#FFFFFF;border-radius:20px;padding:16px}
+.sw{width:34px;height:34px;border-radius:10px;flex:none}
+.hex{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px;color:rgba(60,60,67,.6)}
+.badge{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+.badge .b{min-width:46px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;padding:0 8px}
+.badge .l{font-size:11px;font-weight:600}
+.chip{height:32px;border-radius:999px;padding:0 13px;display:inline-flex;align-items:center;font-size:13px;font-weight:600}
+.track{position:relative;height:28px;border-radius:999px;background:#F2F2F7;flex:1}
+.dot{position:absolute;left:4px;top:4px;width:20px;height:20px;border-radius:999px;background:#004225}
+@keyframes m-snap{0%{transform:translateX(0)}10%{transform:translateX(150px)}50%{transform:translateX(150px)}60%{transform:translateX(0)}100%{transform:translateX(0)}}
+@keyframes m-smooth{0%{transform:translateX(0)}14%{transform:translateX(150px)}50%{transform:translateX(150px)}64%{transform:translateX(0)}100%{transform:translateX(0)}}
+@keyframes m-bouncy{0%{transform:translateX(0)}20%{transform:translateX(150px)}50%{transform:translateX(150px)}70%{transform:translateX(0)}100%{transform:translateX(0)}}
+@keyframes m-reveal{0%{transform:translateX(0)}22%{transform:translateX(150px)}50%{transform:translateX(150px)}72%{transform:translateX(0)}100%{transform:translateX(0)}}
+.m-snap{animation:m-snap 2.5s cubic-bezier(.2,.9,.3,1) infinite}
+.m-smooth{animation:m-smooth 2.5s cubic-bezier(.4,0,.2,1) infinite}
+.m-bouncy{animation:m-bouncy 2.5s cubic-bezier(.3,1.55,.5,1) infinite;background:#E9A83B}
+.m-reveal{animation:m-reveal 2.5s cubic-bezier(.25,1.2,.4,1) infinite}
+@keyframes ring{0%,70%,100%{transform:scale(1)}80%{transform:scale(.92)}}
+.ring{animation:ring 2.5s cubic-bezier(.3,1.3,.5,1) infinite}
+@keyframes flash{0%,79%{opacity:0}80%{opacity:.4}90%,100%{opacity:0}}
+.flash{animation:flash 2.5s ease-out infinite}
+@keyframes livedot{0%,100%{opacity:1}50%{opacity:.35}}
+.livedot{animation:livedot 1.4s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.m-snap,.m-smooth,.m-bouncy,.m-reveal,.ring,.flash,.livedot{animation:none}}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1000px; position: relative; overflow: hidden; background: #F2F2F7; color: #000000; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; font-size: 15px; letter-spacing: -0.15px; padding: 36px 40px">
+
+  <!-- Header -->
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 26px">
+    <div>
+      <div class="r" style="font-size: 40px; font-weight: 800; letter-spacing: -0.8px; line-height: 1">BigBack<span style="color: #004225">.</span></div>
+      <div style="font-size: 15px; color: rgba(60,60,67,.6); margin-top: 8px">Design system v1 · SwiftUI · iOS 18+ (Liquid Glass on iOS 26) · Human Interface Guidelines</div>
+    </div>
+    <div style="display: flex; gap: 8px">
+      <div class="chip" style="background: #004225; color: #FFFFFF">Native first</div>
+      <div class="chip" style="background: #FFFFFF">Content is the colour</div>
+      <div class="chip" style="background: #FFFFFF">Fun = motion + copy</div>
+      <div class="chip" style="background: #FFFFFF">One green action per screen</div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 24px; align-items: flex-start">
+
+    <!-- ===================== Column 1: Colour ===================== -->
+    <div style="width: 360px; display: flex; flex-direction: column; gap: 18px">
+      <div>
+        <p class="cap">Brand colour · light / dark</p>
+        <div class="card" style="display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div class="sw" style="background: #004225"></div><div class="sw" style="background: #3FA46E"></div>
+            <div style="flex: 1"><div style="font-weight: 600">accent <span style="font-weight: 400; color: rgba(60,60,67,.6)">· British racing green</span></div><div class="hex">#004225 · #3FA46E · buttons, selection, tint</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div class="sw" style="background: #00301B"></div><div class="sw" style="background: #2F8A5A"></div>
+            <div style="flex: 1"><div style="font-weight: 600">accentPressed</div><div class="hex">#00301B · #2F8A5A · pressed state</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div class="sw" style="background: #E4F0E8"></div><div class="sw" style="background: #12291E"></div>
+            <div style="flex: 1"><div style="font-weight: 600">accentSoft</div><div class="hex">#E4F0E8 · #12291E · selected chip, toast</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div class="sw" style="background: #FFFFFF; box-shadow: inset 0 0 0 1px rgba(60,60,67,.18)"></div><div class="sw" style="background: #04140C"></div>
+            <div style="flex: 1"><div style="font-weight: 600">onAccent</div><div class="hex">#FFFFFF · #04140C · text on green (AAA / AA)</div></div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div class="sw" style="background: #E9A83B"></div><div class="sw" style="background: #F2B95A"></div>
+            <div style="flex: 1"><div style="font-weight: 600">celebrate</div><div class="hex">#E9A83B · #F2B95A · new #1, streak, confetti only</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="cap">Surfaces + text · iOS system colours</p>
+        <div class="card" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 8px">
+          <div style="display: flex; align-items: center; gap: 8px"><div class="sw" style="width: 24px; height: 24px; border-radius: 7px; background: #FFFFFF; box-shadow: inset 0 0 0 1px rgba(60,60,67,.18)"></div><span style="font-size: 12px">background</span></div>
+          <div style="display: flex; align-items: center; gap: 8px"><div class="sw" style="width: 24px; height: 24px; border-radius: 7px; background: #F2F2F7; box-shadow: inset 0 0 0 1px rgba(60,60,67,.12)"></div><span style="font-size: 12px">grouped</span></div>
+          <div style="display: flex; align-items: center; gap: 8px"><div class="sw" style="width: 24px; height: 24px; border-radius: 7px; background: #000000"></div><span style="font-size: 12px">feed + camera</span></div>
+          <div style="display: flex; align-items: center; gap: 8px"><div class="sw" style="width: 24px; height: 24px; border-radius: 7px; background: #000000"></div><span style="font-size: 12px">label</span></div>
+          <div style="display: flex; align-items: center; gap: 8px"><div class="sw" style="width: 24px; height: 24px; border-radius: 7px; background: rgba(60,60,67,.6)"></div><span style="font-size: 12px">secondary</span></div>
+          <div style="display: flex; align-items: center; gap: 8px"><div class="sw" style="width: 24px; height: 24px; border-radius: 7px; background: #FF3B30"></div><span style="font-size: 12px">destructive</span></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="cap">Reaction tiers · label + fill + colour</p>
+        <div class="card" style="display: flex; justify-content: space-between; padding: 14px 18px">
+          <div class="badge"><div class="b r" style="background: #004225; color: #FFFFFF">9.2</div><div class="l" style="color: #004225">Loved it</div></div>
+          <div class="badge"><div class="b r" style="background: #E4F0E8; color: #004225">7.1</div><div class="l" style="color: #004225">Good</div></div>
+          <div class="badge"><div class="b r" style="background: #E5E5EA; color: #000000">5.0</div><div class="l">Mid</div></div>
+          <div class="badge"><div class="b r" style="background: #F2F2F7; color: rgba(60,60,67,.6); border: 1.5px dashed rgba(60,60,67,.35)">2.4</div><div class="l" style="color: rgba(60,60,67,.6)">Nah</div></div>
+        </div>
+        <div class="card" style="display: flex; justify-content: space-between; padding: 14px 18px; margin-top: 8px; background: #1C1C1E">
+          <div class="badge"><div class="b r" style="background: #3FA46E; color: #04140C">9.2</div><div class="l" style="color: #3FA46E">Loved it</div></div>
+          <div class="badge"><div class="b r" style="background: #12291E; color: #3FA46E">7.1</div><div class="l" style="color: #3FA46E">Good</div></div>
+          <div class="badge"><div class="b r" style="background: #2C2C2E; color: #FFFFFF">5.0</div><div class="l" style="color: #FFFFFF">Mid</div></div>
+          <div class="badge"><div class="b r" style="background: #1C1C1E; color: rgba(235,235,245,.6); border: 1.5px dashed rgba(235,235,245,.3)">2.4</div><div class="l" style="color: rgba(235,235,245,.6)">Nah</div></div>
+        </div>
+        <div style="font-size: 12px; color: rgba(60,60,67,.6); margin-top: 8px; line-height: 1.4">Bands: Loved 8–10 · Good 6–7.9 · Mid 4–5.9 · Nah 0–3.9. Text ≥ 4.5:1, icons ≥ 3:1, in both modes. Colour is never the only signal.</div>
+      </div>
+    </div>
+
+    <!-- ===================== Column 2: Type + components ===================== -->
+    <div style="width: 368px; display: flex; flex-direction: column; gap: 18px">
+      <div>
+        <p class="cap">Type · SF Pro + SF Pro Rounded · Dynamic Type only</p>
+        <div class="card" style="display: flex; flex-direction: column; gap: 9px">
+          <div style="display: flex; align-items: baseline; justify-content: space-between"><span class="r" style="font-size: 34px; font-weight: 800; letter-spacing: -0.6px; line-height: 1.05">Tonight</span><span class="hex">largeTitle · rounded bold</span></div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between"><span class="r" style="font-size: 22px; font-weight: 700">Kinkaku Izakaya</span><span class="hex">title2 · rounded semibold</span></div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 17px; font-weight: 600">Your picks</span><span class="hex">headline</span></div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 17px">the karaage was unreal</span><span class="hex">body</span></div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 15px; color: rgba(60,60,67,.6)">0.6 km · 4 min · 3 friends been</span><span class="hex">subheadline</span></div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 13px; font-weight: 600">Late Night · Cheap Eats</span><span class="hex">footnote semibold</span></div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between; border-top: 0.5px solid rgba(60,60,67,.29); padding-top: 8px"><span class="r" style="font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; color: #004225">9.2</span><span class="hex">score · rounded, monospaced digits, .numericText()</span></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="cap">Components</p>
+        <div class="card" style="display: flex; flex-direction: column; gap: 12px">
+          <div style="height: 50px; border-radius: 999px; background: #004225; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 600">Let’s eat</div>
+          <div style="display: flex; gap: 8px">
+            <div style="flex: 1; height: 44px; border-radius: 999px; background: #E4F0E8; color: #004225; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">Share invite</div>
+            <div style="flex: 1; height: 44px; border-radius: 999px; background: #E4F0E8; color: #004225; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">Reserve</div>
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap">
+            <div class="chip" style="background: #004225; color: #FFFFFF">Ramen</div>
+            <div class="chip" style="background: rgba(118,118,128,.12)">Cheap</div>
+            <div class="chip" style="background: rgba(118,118,128,.12)">Open late</div>
+            <div class="chip" style="background: rgba(118,118,128,.12)">Walkable</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 4px 0; border-top: 0.5px solid rgba(60,60,67,.29); padding-top: 12px">
+            <span class="r" style="width: 18px; color: rgba(60,60,67,.6); font-weight: 700">1</span>
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #C99A3E"></div>
+            <div style="flex: 1; min-width: 0"><div style="font-weight: 600">Gol’s Lanzhou Noodle</div><div style="font-size: 13px; color: rgba(60,60,67,.6)">Late Night · Sep 28</div></div>
+            <div class="badge"><div class="b r" style="background: #004225; color: #FFFFFF; height: 30px; font-size: 15px">9.5</div></div>
+          </div>
+          <div style="display: flex; justify-content: center">
+            <div style="border-radius: 999px; padding: 9px 16px; font-size: 14px; font-weight: 600; background: rgba(249,249,249,.9); box-shadow: 0 6px 20px rgba(0,0,0,.12), inset 0 0 0 0.5px rgba(0,0,0,.06)">Saved to Want to go</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="cap">Tab bar · 4 tabs + Snap accessory</p>
+        <div style="border-radius: 20px; background: linear-gradient(#E9E2D6, #D8CFC0); padding: 14px 12px 12px; display: flex; flex-direction: column; gap: 8px; align-items: center">
+          <div style="display: flex; gap: 8px">
+            <div style="height: 40px; border-radius: 999px; background: #004225; color: #FFFFFF; padding: 0 16px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Snap a meal</div>
+            <div style="height: 40px; border-radius: 999px; background: rgba(249,249,249,.85); padding: 0 14px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">
+              <span class="livedot" style="width: 8px; height: 8px; border-radius: 99px; background: #FF3B30"></span>Kinkaku · 0:42 · 3 snaps</div>
+          </div>
+          <div style="width: 100%; height: 56px; border-radius: 999px; background: rgba(249,249,249,.85); display: flex; align-items: center; justify-content: space-around; font-size: 10px; font-weight: 600; color: rgba(60,60,67,.6)">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; color: #004225"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M5 15h14"/></svg>Feed</div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2 1-3 4-3 7h3"/></svg>Tonight</div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Activity</div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.5c1.5-2 3.3-3 5.5-3s4 1 5.5 3"/></svg>You</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: rgba(60,60,67,.6); margin-top: 8px; line-height: 1.4">Tabs navigate; the camera is an action. Snap lives in <span class="hex">tabViewBottomAccessory</span> and turns into the Live meal pill.</div>
+      </div>
+    </div>
+
+    <!-- ===================== Column 3: Motion + camera ===================== -->
+    <div style="width: 352px; display: flex; flex-direction: column; gap: 18px">
+      <div>
+        <p class="cap">Motion tokens · springs, interruptible</p>
+        <div class="card" style="display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; align-items: center; gap: 10px"><div style="width: 118px"><div style="font-weight: 600">snap</div><div class="hex">.snappy(0.25)</div></div><div class="track"><div class="dot m-snap"></div></div></div>
+          <div style="display: flex; align-items: center; gap: 10px"><div style="width: 118px"><div style="font-weight: 600">smooth</div><div class="hex">.smooth(0.35)</div></div><div class="track"><div class="dot m-smooth"></div></div></div>
+          <div style="display: flex; align-items: center; gap: 10px"><div style="width: 118px"><div style="font-weight: 600">bouncy</div><div class="hex">.bouncy(0.5, +0.1)</div></div><div class="track"><div class="dot m-bouncy"></div></div></div>
+          <div style="display: flex; align-items: center; gap: 10px"><div style="width: 118px"><div style="font-weight: 600">reveal</div><div class="hex">.spring(0.55, 0.82)</div></div><div class="track"><div class="dot m-reveal"></div></div></div>
+          <div style="font-size: 12px; color: rgba(60,60,67,.6); line-height: 1.4">snap = chips and toggles · smooth = sheets and reorder · bouncy = celebrations only · reveal = score count-up. Reduce Motion → 200 ms crossfades, no confetti.</div>
+        </div>
+      </div>
+
+      <div>
+        <p class="cap">Camera · dual, no timer</p>
+        <div class="card" style="display: flex; gap: 14px">
+          <div style="width: 150px; height: 300px; border-radius: 26px; background: #000000; position: relative; overflow: hidden; flex: none; color: #FFFFFF">
+            <div class="r" style="text-align: center; font-weight: 800; font-size: 13px; margin-top: 12px">BigBack.</div>
+            <div style="display: flex; justify-content: center; margin-top: 4px"><div style="font-size: 8px; font-weight: 600; background: rgba(255,255,255,.16); border-radius: 99px; padding: 2px 7px; display: flex; align-items: center; gap: 4px"><span class="livedot" style="width: 5px; height: 5px; border-radius: 9px; background: #FF3B30"></span>Kinkaku · 0:42</div></div>
+            <div style="position: absolute; left: 5px; right: 5px; top: 48px; height: 186px; border-radius: 16px; background: radial-gradient(circle at 60% 60%, #E3A35A, #8E4B22 70%); overflow: hidden">
+              <div style="position: absolute; left: 7px; top: 7px; width: 42px; height: 56px; border-radius: 10px; background: linear-gradient(#5D7C8C, #2F4652); border: 1.5px solid #FFFFFF"></div>
+              <div class="flash" style="position: absolute; inset: 0; background: #FFFFFF"></div>
+            </div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 48px; display: flex; justify-content: center; gap: 8px; font-size: 7.5px; font-weight: 600; color: rgba(255,255,255,.55)"><span>Order</span><span style="color: #FFFFFF">Food</span><span>Crew</span></div>
+            <div style="position: absolute; left: 0; right: 0; bottom: 10px; display: flex; justify-content: center">
+              <div class="ring" style="width: 34px; height: 34px; border-radius: 99px; border: 3px solid #FFFFFF; display: flex; align-items: center; justify-content: center"><div style="width: 24px; height: 24px; border-radius: 99px; background: #FFFFFF"></div></div>
+            </div>
+          </div>
+          <div style="font-size: 13px; line-height: 1.45; display: flex; flex-direction: column; gap: 6px">
+            <div><b>Black canvas</b>, wordmark + live pill on top.</div>
+            <div><b>Rear 3:4</b>, 28 pt continuous corners. <b>Front inset</b> top-left, 30% width, white stroke; drag to any corner, tap to swap.</div>
+            <div><b>80 pt white-ring shutter</b>: scale 0.92 + 40% flash + medium impact.</div>
+            <div><b>Moments</b>: Walk-in · Order · Food · Crew · Damage report.</div>
+            <div>After the snap: dish chips, then <b style="color: #004225">Keep</b> / Retake.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="cap">Haptics · .sensoryFeedback</p>
+        <div class="card" style="display: grid; grid-template-columns: 1fr auto; gap: 7px 12px; font-size: 13px">
+          <span>Shutter</span><span class="hex">.impact(.medium)</span>
+          <span>Swipe crosses threshold</span><span class="hex">.selection</span>
+          <span>Choice made · RSVP</span><span class="hex">.impact(.light)</span>
+          <span>New #1 · match · streak</span><span class="hex">.success</span>
+          <span>Offline · failed upload</span><span class="hex">.error</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer: voice + App Store guardrails -->
+  <div style="position: absolute; left: 40px; right: 40px; bottom: 30px; display: flex; gap: 24px">
+    <div class="card" style="flex: 1; padding: 14px 18px">
+      <p class="cap" style="margin-bottom: 6px">Voice</p>
+      <div style="font-size: 14px; line-height: 1.45">“Big back behaviour.” · “Who’s down?” · “That’s a match.” · “Clean plate. Respect.”<br><span style="color: rgba(60,60,67,.6)">Jokes about appetite and food, never bodies or weight.</span></div>
+    </div>
+    <div class="card" style="flex: 1.25; padding: 14px 18px">
+      <p class="cap" style="margin-bottom: 6px">App Store guardrails baked into the system</p>
+      <div style="font-size: 13px; line-height: 1.5">Native components (Dynamic Type to AX5, Dark Mode, VoiceOver) · 44 pt tap targets · Report + Block in every post menu · permissions asked in context, app works if denied · no competitor names in copy or screenshots · no “coming soon” buttons.</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
