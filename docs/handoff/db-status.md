@@ -1,54 +1,60 @@
 # Database status: `big-back` (iefchnylrxolydtulmgt)
 
-_Updated 2026-10-15._
+_Updated 2026-10-15. Everything in `supabase/migrations/` is applied; file names match the applied versions._
 
 ## Applied (in order)
-| Applied name | Local file |
+| Version · name | What it does |
 |---|---|
-| `extensions_types_utils` | `0001_extensions_types_utils.sql` |
-| `identity_social` | `0002_identity_social.sql` |
-| `places` | `0003_places.sql` |
-| `core_tables` | `0004_core_tables.sql` |
-| `access_rls` | `0005_access_rls.sql` (RLS on all tables, verified) |
-| `logic_core` | `0006a_logic_core.sql` (guards, ranking engine, feed, place scores, Tonight, search, streak, leaderboard) |
-| `logic_plan_by_code` | `0006b_logic_plan_by_code.sql` |
-| `logic_social_actions` | `0006c_logic_social_actions.sql` (tagging, plans, RSVP, Let's eat, Food Fights) |
-| `logic_notifications` | `0006d_logic_notifications.sql` |
-| `logic_jobs_privileges` | `0006e_logic_jobs_privileges.sql` |
-| `storage_realtime_cron_seed` | `0007_storage_realtime_cron_seed.sql` (4 buckets, realtime, 5 cron jobs, UW + seasons + badges + config) |
-| `resolve_place` | `0008_resolve_place.sql` |
-| `app_review_access` | `0009_app_review_access.sql` (signup allowlist + `profiles.is_demo` for App Review) |
+| `20261015061936_extensions_types_utils` | Extensions (PostGIS, pg_trgm, citext, unaccent, pg_net, pg_cron), enums, helpers |
+| `20261015062150_identity_social` | Schools, profiles, follows, blocks, crews |
+| `20261015062253_places` | Places, hours, open-data staging, edits, stats, saves |
+| `20261015062610_core_tables` | Meals, media, parties, rankings, comparisons, plans, Let's eat, notifications, moderation |
+| `20261015063101_access_rls` | RLS on all 41 tables, plus the visibility helpers |
+| `20261015070311_logic_core` | Guard triggers, ranking engine, feed, place scores, Tonight, search, streak, leaderboard |
+| `20261015071735_logic_plan_by_code` | Invite lookup by code |
+| `20261015071854_logic_social_actions` | Tagging, plans, RSVP, Let's eat, Food Fights |
+| `20261015072016_logic_notifications` | Notification triggers |
+| `20261015072048_logic_jobs_privileges` | Jobs and function privileges |
+| `20261015072126_storage_realtime_cron_seed` | 4 Storage buckets, realtime, 5 cron jobs, UW + seasons + badges + config |
+| `20261015072145_resolve_place` | MapKit result → our place |
+| `20261015072220_app_review_access` | Sign-up allowlist + `profiles.is_demo` for the App Review demo account |
+| `20261015150709_rls_returning_fixes` | Lets the app read back a meal, plan, crew or Let's eat session right after creating it |
+| `20261015154339_places_anywhere` | Places store their own country and time zone, so students can rank anywhere and "open now" is right outside Ontario |
+| `20261015155311_advisor_fixes` | Follow/block helpers answer only about the caller; nothing privileged is callable signed-out; every foreign key indexed |
+| `20261015173756_ai_model_haiku_5_5` | `app_config.ai.model` = `claude-haiku-5-5` |
 
-## Pending
-- **`0010_rls_returning_fixes.sql`: not applied** (the approval prompt was declined). It's a bug fix found by the smoke test:
-  - **The bug:** the SELECT policies on `meals`, `plans`, `crews` and `decide_sessions` look the row up by its own id, so a client `insert(...).select()` fails with "new row violates row-level security policy".
-  - **The fix:** `ALTER POLICY` to check the row's own columns first. Apply it next, then re-run the smoke test.
+## Smoke test: passing
+`supabase/tests/smoke_test.sql` runs as three fake UW students and always rolls back. Last run (2026-10-15) passed
+all 20 checks:
 
-## Smoke test
-- `supabase/tests/smoke_test.sql` (it runs as three fake students and always rolls back).
-- **Last run:**
-  - Profile creation and school assignment passed.
-  - It then stopped at the first meal insert with the RETURNING bug that 0010 fixes.
-  - Everything after that point hasn't run yet.
+`profiles+school, first-rating=9.0, binary-insert+rescore, tier-bands, meal-guard, rankings-rls, move_ranking,
+feed+friend_went, private-profiles, party+tagging, lets-eat, plans+rsvp, reads, resolve_place, rank-anywhere,
+blocks, privacy-helpers, jobs, local-hours, signup-uw-only`
 
-## Changes vs. the original design (all reflected in docs/architecture/02-database-design.md)
-- **`delete_my_account()` was removed from SQL.** Account deletion is done by the `delete-account` Edge Function: it deletes Storage files, then calls `auth.admin.deleteUser`. That's Supabase's recommended path, and it also clears sessions and identities. The Supabase MCP also holds back `delete from auth.users` statements.
-- **`_refresh_user_similarity`** is upsert-only, with no delete.
-- **`resolve_place` is an RPC**, not an Edge Function.
-- **App Review access:** `signup_allowlist` + `profiles.is_demo`.
+## Advisors (2026-10-15, after `advisor_fixes`)
+- **Fixed:**
+  - follow/block helpers could be used to probe other people;
+  - signed-out access to privileged functions;
+  - 29 unindexed foreign keys.
+- **Expected and left as is:**
+  - `ai_requests` and `place_import` have RLS with no policies. They are server-only, so clients get nothing.
+  - "Signed-in users can execute SECURITY DEFINER function" lists the app's own RPCs (`submit_rating`, `get_feed`, …). Each one checks `auth.uid()` itself.
+  - "Unused index" findings appear because there's no traffic yet.
+
+## Clean-up for later (SQL editor)
+- `drop function public._resolve_place_v1(text, text, double precision, double precision, text, text);`. It's the
+  pre-`places_anywhere` version, renamed and locked; no role can call it. The Supabase MCP holds DROP statements,
+  so run this from the dashboard.
 
 ## Lessons for running migrations through the Supabase MCP
-- Statements the MCP considers destructive (`delete from auth.users`, `delete ... where true`, `drop policy`) are held for a confirmation that doesn't appear, and the call times out after 60 s. Use `ALTER` or upserts instead, or run them from the Supabase SQL editor.
-- In cloud sessions, every MCP call still asks for approval even with `.claude/settings.json` allow rules. The night-shift session got stuck on its first prompt, and its work was taken over here.
-
-## Still to do (no owner input needed)
-1. Apply 0010 and re-run the smoke test until it reports `SMOKE_TEST_PASSED`.
-2. Run `get_advisors` (security + performance) and fix the findings.
-3. Rename local files to the applied version numbers (`list_migrations`) so `supabase db push` works.
-4. Generate types into `supabase/types/database.types.ts`.
+- Statements the MCP considers destructive (`delete from auth.users`, `delete ... where true`, `drop policy`) are
+  held for a confirmation that never appears, and the call times out after 60 s. Use `ALTER`, upserts or renames,
+  or run them from the Supabase SQL editor.
+- In cloud sessions, every MCP call asks for approval even with `.claude/settings.json` allow rules.
 
 ## Manual dashboard steps (owner)
-- **Auth → Hooks:** enable **Before User Created**, pointing at `public.hook_before_user_created`.
+- **Auth → Hooks:** enable **Before User Created** → `public.hook_before_user_created`. This is what limits sign-up to
+  `@uwaterloo.ca` (the smoke test checks the function; the hook itself must be switched on in the dashboard).
 - **Auth → Email:** a 6-digit OTP email template with the BigBack name.
 - **Auth:** turn on leaked-password protection, which applies to the App Review demo account's password.
 - **App Review demo account:**

@@ -82,29 +82,45 @@ iOS app ──(user JWT)──▶ Supabase Edge Function  ai-ask / ai-dish / ai-
 - **Streaming** for Ask BigBack, so cards appear as they're decided.
 - **Prompt caching:** the system prompt and tool definitions are a frozen prefix, so repeat requests mostly hit the cache.
 - **Structured outputs** (`output_config.format`) for every response the app renders (cards, dish pick, caption).
-- **Model: a Haiku-tier model, chosen for cost (owner decision 2026-10-15).** The owner asked for `claude-haiku-4-5`
-  ($1 / $5 per MTok). Note: `claude-haiku-5-5` is newer *and* 10x cheaper ($0.10 / $0.50), and is pending the
-  owner's confirmation.
+- **Model: Claude Haiku 5.5 (`claude-haiku-5-5`), owner decision 2026-10-15.** $0.10 / $0.50 per million
+  input / output tokens for prompts up to 100K tokens (every Ask BigBack request is far below that). Haiku 4.5 was
+  $1 / $5, so this is about 10× cheaper for the same feature. The model ID lives in `app_config.ai.model`, so a
+  future switch needs no app release.
+- **How Haiku 5.5 is called** (it differs from Haiku 4.5 in ways that return errors if ignored):
+  - `output_config: { effort: "low" }`. The default is `medium`; `low` is cheaper and faster, and is plenty for
+    turning a short request into filters. Raise it only if an eval of real requests shows a quality gap.
+  - No `temperature`, `top_p` or `top_k` (non-default values return a 400). Output is constrained with
+    `strict: true` tools and structured outputs instead.
+  - No assistant prefill (400). The request always ends with a user turn.
+  - Thinking is on by default: read response blocks by `type`, never `content[0]`; give `max_tokens` room
+    (about 2,000) so thinking can't crowd out the answer; pass thinking blocks back unchanged in the tool loop and
+    keep the conversation append-only.
+  - Refusals (`stop_reason: "refusal"`) have no server-side fallback on Haiku. The app then shows the regular
+    Tonight results (`tonight_picks`), so the user is never stuck.
+  - Haiku 5.5 counts the same text as about 30% more tokens than Haiku 4.5. Budgets and dashboards use counts
+    measured on `claude-haiku-5-5`.
 - **Guardrails:**
-  - Per-user rate limits (e.g. 30 asks a day).
+  - Per-user rate limit: 10 asks a day (`app_config.ai.daily_limit`).
   - The prompt treats user text as data, not instructions.
   - Tools are read-only.
   - Tool results are filtered to what the user is allowed to see.
   - Logs keep the request ID and token usage, not the photos.
 
-## Rough cost (10k monthly users, estimates to verify with real traffic)
+## Rough cost (estimates to verify with real traffic)
 
-| Feature | Volume / month | `claude-opus-5-5` | `claude-haiku-5-5` (if chosen) |
-|---|---|---|---|
-| Ask BigBack (~5k tokens in, ~600 out, cached prefix) | 100k asks | ~$2–5k | ~$100 |
-| Dish suggestion (1 image) | 150k snaps | ~$1.5k | ~$40 |
-| Recap drafts | 50k | ~$0.5–1k | ~$20 |
+One Ask BigBack request is roughly 6–10k input tokens across its tool rounds (system prompt, tool definitions, the
+request and tool results) and under 1k output tokens. On Haiku 5.5 that's about **$0.001 per ask**.
 
-At campus scale the Opus numbers are fine. Picking a cheaper model per route (for example Haiku 5.5 for dish
-suggestions, which is a simple pick-from-a-list task) is a decision to make later, based on measured quality and an
-eval of real requests.
+| Volume | Claude Haiku 5.5 | (Haiku 4.5, for comparison) |
+|---|---|---|
+| 1k students × 10 asks / month = 10k asks | ~$10 / month | ~$100 |
+| 10k students × 10 asks / month = 100k asks | ~$100 / month | ~$1,000 |
+
+Caching the frozen prefix (system prompt + tools) lowers this further: cache reads cost a tenth of the input rate.
+Check `usage.cache_read_input_tokens` to confirm the prefix is long enough to be cached. The per-user daily limit
+(10 asks, logged in `ai_requests`) caps the worst case.
 
 ## Scope (owner decision 2026-10-15: AI stays small and cheap)
-- **MVP:** Ask BigBack (solo) only, with a tight daily limit per user.
+- **MVP:** Ask BigBack (solo) only, on Claude Haiku 5.5, with a tight daily limit per user.
 - **Maybe later, if cheap and wanted:** dish suggestion from photos, recap writer.
 - **Parked:** group asks, menu reader, follow summaries, taste profiles.

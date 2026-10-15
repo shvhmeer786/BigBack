@@ -75,6 +75,7 @@ erDiagram
   - `primary_category`, `cuisines[]`, `tags[]` (GIN)
   - `price_level 1–4`
   - `reservation_provider`, `reservation_url`, `menu_url`
+  - `country` (ISO code) and `timezone` (IANA, e.g. `America/Vancouver`), both from MapKit. Students sign up with a UW email but rank places anywhere; "open now" is computed in the place's own time zone (`America/Toronto` when unknown).
 - **External IDs** (`apple_place_id`, `google_place_id`, `fsq_place_id`, `overture_id`, `osm_id`, `yelp_business_id`): unique, IDs only, no copied provider content.
 - **Related tables:**
   - `place_hours` (dow/opens/closes; an overnight slot has `closes <= opens`)
@@ -193,6 +194,8 @@ erDiagram
 - `is_blocked_between(a, b)`
 - `is_following(a, b)`
 
+The last two answer only when the signed-in user is one of the two people (or there's no user, as in system jobs); otherwise they return NULL. That stops anyone using them as RPCs to probe strangers' follows or blocks. None of the helpers can be called by signed-out (`anon`) users, and trigger functions can't be called through the API at all.
+
 **Guard triggers** stop clients from changing system-owned columns:
 - profile school;
 - meal rating fields and posting;
@@ -208,7 +211,7 @@ erDiagram
 | `tonight_picks(lat, lng, craving, vibe, max_price, radius_m, novelty, limit)` | rows | Ranked picks with reason fields (top friend + score, loved count, saved, open now, walk minutes) |
 | `search_places(q, lat, lng, limit)` | rows | Trigram search, distance-aware |
 | `nearby_places(lat, lng, radius_m, limit)` | rows | Map viewport |
-| `resolve_place(apple_id, name, lat, lng, category, address)` | uuid | MapKit result → our place (Apple ID → nearby similar name → open-data promote → new user place, max 30 per day) |
+| `resolve_place(apple_id, name, lat, lng, category, address, country, timezone)` | uuid | MapKit result → our place (Apple ID → nearby similar name → open-data promote → new user place, max 30 per day). Works anywhere; stores the place's country and time zone from MapKit |
 | `predicted_score(place, user)` | numeric | Similarity-weighted, shrunk to the campus score (k = 2) |
 | `submit_rating(...)`, `rerate_visit(...)`, `move_ranking(...)`, `record_comparison(...)` | | Ranking engine |
 | `tag_friends(meal, users[])`, `respond_party_invite(party, accept)`, `join_party(code)` | | Eating together |
@@ -241,6 +244,7 @@ audio/{user_id}/{meal_id}/{quick_take_id}.m4a                                 pr
 - Geo: GiST on `places.location`, `place_import.location`.
 - Search: trigram GIN on `places.name_key`, `dishes.name_key`, `profiles.handle/display_name`.
 - Partial indexes for live meals, open reports, upcoming plans, unpushed notifications.
+- Every foreign key has a covering index (migration `advisor_fixes`), so deleting an account or a meal cascades without full-table scans.
 
 ## 9. Scale notes
 At one campus (tens of thousands of users), every query here is index-backed. Three things to watch as we grow:

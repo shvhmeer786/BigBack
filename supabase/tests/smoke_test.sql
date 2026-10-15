@@ -11,7 +11,7 @@ declare
   c uuid := gen_random_uuid();  -- Cara
   p1 uuid; p2 uuid; p3 uuid; p4 uuid;
   m1 uuid; m2 uuid; m3 uuid; mb uuid; m5 uuid;
-  v_party uuid; v_bob_meal uuid; v_session uuid; v_cand uuid; v_match uuid;
+  v_party uuid; v_bob_meal uuid; v_session uuid; v_cand uuid; v_match uuid; v_far uuid;
   v_plan public.plans;
   r record;
   n int;
@@ -173,6 +173,18 @@ begin
   assert (select source from public.places where id = v_cand) = 'user', 'unknown place should be user-sourced';
   ok := array_append(ok, 'resolve_place');
 
+  -- ---------- Rank anywhere: UW students eat in Vancouver and New York too ----------
+  v_far := public.resolve_place('apple-smoke-van', 'Smoke Van Sushi', 49.2827, -123.1207, 'restaurant', null, 'ca', 'America/Vancouver');
+  assert (select timezone from public.places where id = v_far) = 'America/Vancouver', 'place time zone not stored';
+  assert (select country from public.places where id = v_far) = 'CA', 'country should be normalised to CA';
+  v_cand := public.resolve_place('apple-smoke-nyc', 'Smoke NYC Slice', 40.7128, -74.0060, 'restaurant', null, 'US', 'Mars/Base');
+  assert (select country from public.places where id = v_cand) = 'US', 'US place stored with the wrong country';
+  assert (select timezone from public.places where id = v_cand) is null, 'an invalid time zone should be ignored';
+  insert into public.meals (user_id, place_id, status) values (a, v_far, 'unrated') returning id into m3;
+  select * into r from public.submit_rating(m3, 'good', 'cheap_eats', 0, true, '[]'::jsonb);
+  assert r.score is not null, 'could not rate a place outside Waterloo';
+  ok := array_append(ok, 'rank-anywhere');
+
   -- ---------- Blocks ----------
   perform set_config('request.jwt.claims', json_build_object('sub', c, 'role', 'authenticated')::text, true);
   insert into public.blocks (blocker_id, blocked_id) values (c, a);
@@ -180,12 +192,36 @@ begin
   assert not exists (select 1 from public.profiles where id = c), 'blocked user still visible';
   ok := array_append(ok, 'blocks');
 
+  -- ---------- Privacy: nobody can ask about other people's follows or blocks ----------
+  perform set_config('request.jwt.claims', json_build_object('sub', c, 'role', 'authenticated')::text, true);
+  assert public.is_following(a, b) is null, 'is_following answered about two other users';
+  assert public.is_blocked_between(a, b) is null, 'is_blocked_between answered about two other users';
+  assert public.is_blocked_between(c, a), 'your own block should be visible to you';
+  perform set_config('request.jwt.claims', json_build_object('sub', a, 'role', 'authenticated')::text, true);
+  ok := array_append(ok, 'privacy-helpers');
+
   -- ---------- Jobs (as postgres) ----------
   execute 'reset role';
   perform public._refresh_place_stats();
   assert exists (select 1 from public.place_stats where place_id = p1), 'place_stats not refreshed';
   perform public._close_stale_meals();
   ok := array_append(ok, 'jobs');
+
+  -- ---------- Opening hours use the place's own time zone ----------
+  insert into public.place_hours (place_id, dow, opens, closes)
+  select v_far, d, time '09:00', time '17:00' from generate_series(0, 6) d;
+  -- 23:30 UTC is 16:30 in Vancouver (open) but 19:30 in Toronto (closed).
+  assert public.is_open_at(v_far, timestamptz '2026-10-15 23:30:00+00') = true, 'open_now ignored the place time zone';
+  assert public.is_open_at(v_far, timestamptz '2026-10-16 02:00:00+00') = false, 'should be closed at 19:00 Vancouver time';
+  ok := array_append(ok, 'local-hours');
+
+  -- ---------- Sign-up is UW-only (Before User Created hook) ----------
+  assert public.hook_before_user_created('{"user":{"email":"new.student@uwaterloo.ca"}}') = '{}'::jsonb, 'uwaterloo.ca should be allowed';
+  assert public.hook_before_user_created('{"user":{"email":"New.Student@UWaterloo.CA"}}') = '{}'::jsonb, 'domain check should ignore case';
+  assert (public.hook_before_user_created('{"user":{"email":"x@gmail.com"}}') -> 'error') is not null, 'gmail should be rejected';
+  assert (public.hook_before_user_created('{"user":{"email":"x@uwaterloo.ca.evil.com"}}') -> 'error') is not null, 'lookalike domain accepted';
+  assert (public.hook_before_user_created('{"user":{"email":"x@notuwaterloo.ca"}}') -> 'error') is not null, 'lookalike domain accepted';
+  ok := array_append(ok, 'signup-uw-only');
 
   raise exception 'SMOKE_TEST_PASSED: %', array_to_string(ok, ', ');
 end;

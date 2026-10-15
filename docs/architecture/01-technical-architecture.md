@@ -39,7 +39,7 @@ flowchart LR
   CRON --> PG
   PG -- pg_net webhook --> EF
   EF --> APNs[Apple Push]
-  EF --> Claude[Claude API, Haiku]
+  EF --> Claude[Claude API, Haiku 5.5]
   EF --> OT[OpenTable / Resy<br/>deep links, partner APIs later]
   Web[Invite web page<br/>for non-users] --> EF
 ```
@@ -48,7 +48,7 @@ flowchart LR
 1. **The database is the backend.** Business rules live in Postgres: RLS for who sees what, and RPCs for multi-step writes like ranking, tagging, plans and swiping. Edge Functions only exist for things Postgres can't do (push, AI, web pages, external APIs). For a two-person team that means one place to reason about correctness, and no app server to run.
 2. **Offline-first capture.** A meal and its photos must never be lost because of restaurant basement signal. The phone owns the truth until upload finishes.
 3. **Licence-clean place data.** Apple and Google content stays on the device. Our database stores only their IDs plus open-licence data, admin data and user data (§5).
-4. **Cheap by default.** MapKit is free. Supabase Pro is about $25/month. The only AI is a tiny Haiku-tier feature. No paid places API in v1.
+4. **Cheap by default.** MapKit is free. Supabase Pro is about $25/month. The only AI is one small Claude Haiku 5.5 feature. No paid places API in v1.
 
 ---
 
@@ -245,7 +245,7 @@ The iOS side codes against a `ReservationProvider` protocol (`.deepLink`, `.phon
 |---|---|---|
 | `push` | `pg_net` webhook on `notifications` insert, plus a cron sweep for retries | APNs alerts + Live Activity updates; quiet hours; sets `pushed_at` |
 | `invite-web` | Public HTTPS (`bigback.app/p/…`, `/d/…`) | Server-rendered RSVP and swipe pages for people without the app; writes guest RSVPs and votes with the service role, keyed by an unguessable code + guest token; Open-in-app banner |
-| `ai-ask` | App (Ask BigBack) | Haiku-tier Claude with read-only tools that call our RPCs as the user; returns place cards; rate-limited via `ai_requests` (§6) |
+| `ai-ask` | App (Ask BigBack) | Claude Haiku 5.5 with read-only tools that call our RPCs as the user; returns place cards; rate-limited via `ai_requests` (§6) |
 | `delete-account` | App | Deletes the user's Storage objects, then `auth.admin.deleteUser` (cascades to all owned rows), as App Store 5.1.1(v) requires |
 | `reservations` | App (v1.x) | Provider-agnostic availability and booking (OpenTable partner API) |
 | `place-external` | App (optional, §5.3) | Live external rating for the place page; never stored |
@@ -326,9 +326,9 @@ The owner asked which open sources, maps and services we can use for real restau
   1. The app calls the `ai-ask` Edge Function, which runs the Anthropic TypeScript SDK with **read-only tools** (`tonight_picks`, `search_places`, `get_place_scores`, follows' recent activity).
   2. The tools execute **as the user** (their JWT is forwarded, so RLS applies).
   3. Structured output returns `[{place_id, reason}]`, and the app renders only place IDs that came back from the tools, so the model can't invent restaurants.
-- **Model:** the owner asked for `claude-haiku-4-5` ($1 / $5 per MTok). `claude-haiku-5-5` is newer and about 10× cheaper ($0.10 / $0.50) and is recommended. The model ID lives in `app_config.ai.model`, so switching needs no app release.
+- **Model:** Claude Haiku 5.5 (`claude-haiku-5-5`, $0.10 / $0.50 per MTok), owner decision 2026-10-15. Called at `effort: "low"`, with no sampling parameters and no prefill. See [design/02-ai-features.md](../design/02-ai-features.md) for the call details. The model ID lives in `app_config.ai.model`, so switching needs no app release.
 - **Limits:** 10 asks per user per day (`app_config.ai.daily_limit`), logged in `ai_requests`.
-- **Cost:** at 10k MAU × 10 asks/month, roughly $100/month on Haiku 4.5, or about $10 on Haiku 5.5 _(estimate)_.
+- **Cost:** about $0.001 per ask, so at most ~$100/month at 10k MAU × 10 asks/month _(estimate)_.
 
 ---
 
@@ -391,7 +391,7 @@ The owner asked which open sources, maps and services we can use for real restau
 |---|---|---|
 | Supabase (Pro + compute + storage/egress for photos) | $25–60 | $150–400 _(verify with photo volume)_ |
 | MapKit | $0 | $0 |
-| AI (Haiku tier, 10 asks/user/month) | $10–100 | $100–1,000 |
+| AI (Claude Haiku 5.5, up to 10 asks/user/month) | ≤ $100 | ≤ $1,000 |
 | APNs | $0 | $0 |
 | Sentry / PostHog | $0 (free tiers) | ~$50–100 |
 | Apple Developer | $99/yr | $99/yr |
@@ -420,9 +420,10 @@ The owner asked which open sources, maps and services we can use for real restau
 
 ## 13. Decisions waiting on the owner
 1. ~~Visual theme~~: decided. See [design/03-design-system.md](../design/03-design-system.md) (HIG-native, British racing green, SF Pro + SF Pro Rounded, spring motion).
-2. **AI model:** Haiku 4.5 (as requested) vs Haiku 5.5 (newer and about 10× cheaper).
+2. ~~AI model~~: decided. Claude Haiku 5.5 (`claude-haiku-5-5`).
 3. **Outside reviews:** v1 deep links only (recommended), or pay for a live Google/Yelp rating chip.
 4. ~~Data region~~: decided. Keep `us-east-1`, serving Canada and the US; add a `ca-central-1` read replica if needed.
 5. ~~OSM hours~~: decided (accepted). OSM `opening_hours` go into `place_hours` with source `osm`, with ODbL attribution in the app's About → Data sources screen.
-6. **Repo visibility:** make the repo private.
-7. **Domain** for invite links (e.g. `bigback.app`), and the Apple Developer account, so APNs keys can be created.
+6. **Repo visibility:** make the repo private (owner does this in GitHub → Settings → General → Danger Zone).
+7. **Domain** (owner buys it): needed for invite links that open the app (Universal Links), the privacy policy and support pages App Review requires, and a support email. Also the Apple Developer account, so APNs keys can be created.
+8. ~~Where students can rank~~: decided. Sign-up is UW-only (`@uwaterloo.ca`), but students rank restaurants anywhere they eat. Each place stores its own country and time zone (migration `places_anywhere`).

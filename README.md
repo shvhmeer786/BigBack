@@ -10,7 +10,7 @@ follow. Launching at the University of Waterloo.
 | Product vision | [docs/VISION.md](docs/VISION.md) |
 | Beli teardown & research | [docs/research/01-beli-teardown.md](docs/research/01-beli-teardown.md) |
 | Core experiences: Decide · Capture · Rank (incl. scoring model) | [docs/design/01-core-experiences.md](docs/design/01-core-experiences.md) |
-| AI (Ask BigBack, Haiku-tier) | [docs/design/02-ai-features.md](docs/design/02-ai-features.md) |
+| AI (Ask BigBack, Claude Haiku 5.5) | [docs/design/02-ai-features.md](docs/design/02-ai-features.md) |
 | **Design system** (HIG, British racing green, motion, camera) | [docs/design/03-design-system.md](docs/design/03-design-system.md) |
 | **Technical architecture** | [docs/architecture/01-technical-architecture.md](docs/architecture/01-technical-architecture.md) |
 | **Database design** | [docs/architecture/02-database-design.md](docs/architecture/02-database-design.md) |
@@ -25,8 +25,9 @@ follow. Launching at the University of Waterloo.
 | Project ref | `iefchnylrxolydtulmgt` (us-east-1) |
 | API URL | `https://iefchnylrxolydtulmgt.supabase.co` |
 | Client key | Publishable key in `ios/Config/Supabase.xcconfig` |
-| Migrations | `supabase/migrations/` (applied to the project) |
-| Smoke test | `supabase/tests/smoke_test.sql` |
+| Migrations | `supabase/migrations/` (all applied; see [supabase/README.md](supabase/README.md)) |
+| Smoke test | `supabase/tests/smoke_test.sql` (20 checks, passing) |
+| Sign-up | `@uwaterloo.ca` only at launch; students can rank restaurants anywhere |
 
 The publishable key is safe to ship in the app. Every table has Row Level Security enabled, and
 access rules are documented in the database design doc. Secret/service-role keys, APNs keys and the AI

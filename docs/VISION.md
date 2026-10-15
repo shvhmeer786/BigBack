@@ -147,7 +147,7 @@ don't want to lose. Your Want-to-Try list becomes plans.
 - Tagging friends
 - "Go here" invites with a web RSVP page
 - Starter Pack onboarding
-- AI (small, Haiku-tier): Ask BigBack prompt bar only
+- AI (small, Claude Haiku 5.5): Ask BigBack prompt bar only
 - Push notifications
 
 **Fast follow:**
