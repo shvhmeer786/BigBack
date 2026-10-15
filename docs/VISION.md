@@ -147,7 +147,7 @@ don't want to lose. Your Want-to-Try list becomes plans.
 - Tagging friends
 - "Go here" invites with a web RSVP page
 - Starter Pack onboarding
-- AI: Ask BigBack, dish suggestion from photos, recap writer (AI helps you decide and write; it never rates for you)
+- AI (small, Haiku-tier): Ask BigBack prompt bar only
 - Push notifications
 
 **Fast follow:**

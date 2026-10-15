@@ -82,8 +82,9 @@ iOS app ──(user JWT)──▶ Supabase Edge Function  ai-ask / ai-dish / ai-
 - **Streaming** for Ask BigBack, so cards appear as they're decided.
 - **Prompt caching:** the system prompt and tool definitions are a frozen prefix, so repeat requests mostly hit the cache.
 - **Structured outputs** (`output_config.format`) for every response the app renders (cards, dish pick, caption).
-- **Model:** `claude-opus-5-5` by default, with low/medium effort on the chatty routes and server-side `fallbacks`
-  enabled. Per-route model choice is a product/cost decision (see below).
+- **Model: a Haiku-tier model, chosen for cost (owner decision 2026-10-15).** The owner asked for `claude-haiku-4-5`
+  ($1 / $5 per MTok). Note: `claude-haiku-5-5` is newer *and* 10x cheaper ($0.10 / $0.50), and is pending the
+  owner's confirmation.
 - **Guardrails:**
   - Per-user rate limits (e.g. 30 asks a day).
   - The prompt treats user text as data, not instructions.
@@ -103,7 +104,7 @@ At campus scale the Opus numbers are fine. Picking a cheaper model per route (fo
 suggestions, which is a simple pick-from-a-list task) is a decision to make later, based on measured quality and an
 eval of real requests.
 
-## MVP vs later
-- **MVP:** Ask BigBack (solo), dish suggestion, recap writer.
-- **Fast follow:** group asks, menu reader, follow summaries.
-- **Later:** taste profiles, Term Wrapped copy.
+## Scope (owner decision 2026-10-15: AI stays small and cheap)
+- **MVP:** Ask BigBack (solo) only, with a tight daily limit per user.
+- **Maybe later, if cheap and wanted:** dish suggestion from photos, recap writer.
+- **Parked:** group asks, menu reader, follow summaries, taste profiles.
