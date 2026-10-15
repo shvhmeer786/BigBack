@@ -104,7 +104,7 @@ don't want to lose. Your Want-to-Try list becomes plans.
 ```
  [ Feed ]   [ Tonight ]   [ ◉ Camera ]   [ Activity ]   [ You ]
 ```
-- **Feed:** Friends | For You (campus and people with your taste). Full-screen vertical posts: the dual-cam photo
+- **Feed:** people you follow. Full-screen vertical posts: the dual-cam photo
   (food big, selfie inset), score badge, place, who you were with, reactions (including selfie reactions), **Save**
   (double-tap), **Go here**.
 - **Tonight:** a map and list combined. Open-now, friends' spots, Want-to-Try nearby, trending at UW, search, "Let's
@@ -164,5 +164,5 @@ don't want to lose. Your Want-to-Try list becomes plans.
 - Reservation deep links
 
 ## 11. Open questions
-- Should the For You feed include strangers' public posts at launch, or friends-of-friends and campus only?
-- Who gets a Meal in their feed: all followers, or close friends first?
+- ~~Feed scope~~ Decided: the feed shows people you follow; all followers see your Meals. Discovery happens in Tonight, place pages and Food Fights.
+
