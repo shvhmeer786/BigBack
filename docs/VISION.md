@@ -107,7 +107,7 @@ don't want to lose. Your Want-to-Try list becomes plans.
 - **Feed:** people you follow. Full-screen vertical posts: the dual-cam photo
   (food big, selfie inset), score badge, place, who you were with, reactions (including selfie reactions), **Save**
   (double-tap), **Go here**.
-- **Tonight:** a map and list combined. Open-now, friends' spots, Want-to-Try nearby, trending at UW, search, "Let's
+- **Tonight:** an **Ask BigBack** prompt bar (plain-language "where should we eat?", see design/02-ai-features.md), plus a map and list combined. Open-now, friends' spots, Want-to-Try nearby, trending at UW, search, "Let's
   eat" group pick.
 - **Camera:** starts a Meal (or adds a snap to the one already live).
 - **Activity:** invites and RSVPs, To-rate tray, tags, reactions, challenges.
@@ -147,6 +147,7 @@ don't want to lose. Your Want-to-Try list becomes plans.
 - Tagging friends
 - "Go here" invites with a web RSVP page
 - Starter Pack onboarding
+- AI: Ask BigBack, dish suggestion from photos, recap writer (AI helps you decide and write; it never rates for you)
 - Push notifications
 
 **Fast follow:**
