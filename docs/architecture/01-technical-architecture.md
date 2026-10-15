@@ -30,7 +30,7 @@ flowchart LR
     RPC[RPCs: ranking, feed,<br/>Tonight, plans, Let's eat]
     ST[Storage: meal-media, reactions,<br/>avatars, audio]
     RT[Realtime: tables, plans,<br/>swipes, notifications]
-    EF[Edge Functions: resolve-place,<br/>push, invite-web, ai-ask,<br/>delete-account, reservations]
+    EF[Edge Functions: push,<br/>invite-web, ai-ask,<br/>delete-account, reservations]
     CRON[pg_cron jobs]
   end
 
@@ -138,10 +138,11 @@ Each feature module depends on `Core`, `DesignSystem` and repository **protocols
 ### 2.6 Maps and location ("where is it, how far is it")
 - **Map UI:** SwiftUI `Map`, with `MKMapView` wrapped for clustering on the big map. Annotations are score badges coloured by tier; the user's location is shown with `UserAnnotation`.
 - **Search:** `MKLocalSearchCompleter` + `MKLocalSearch`, restricted with `MKPointOfInterestFilter` (restaurant, cafe, bakery, brewery, winery, foodMarket, nightlife). Results merge with our own `search_places` RPC (places friends have ranked rank first).
-- **Resolving a place:** when the user picks an Apple result that isn't in our DB yet, the app calls the `resolve-place` Edge Function with Apple's `MKMapItem.Identifier` and the on-device name and coordinate. The function:
+- **Resolving a place:** when the user picks an Apple result that isn't in our DB yet, the app calls the `resolve_place` RPC with Apple's `MKMapItem.Identifier` and the on-device name and coordinate. The RPC:
   1. Matches an existing place by `apple_place_id`.
-  2. Otherwise fuzzy-matches the open-data staging table (`place_import`) by name trigram within about 75 m.
-  3. Otherwise creates a user-sourced place.
+  2. Otherwise matches an existing place with a similar name (trigram) within 75 m, and links the Apple ID to it.
+  3. Otherwise promotes a match from the open-data staging table (`place_import`).
+  4. Otherwise creates a user-sourced place (at most 30 a day per user).
 
   Apple's name and coordinates are used only for this match, never stored (§5).
 - **Distance and "how far":**
@@ -242,7 +243,6 @@ The iOS side codes against a `ReservationProvider` protocol (`.deepLink`, `.phon
 ### 3.5 Edge Functions (Deno/TypeScript)
 | Function | Trigger | Does |
 |---|---|---|
-| `resolve-place` | App, when picking a MapKit result | Apple ID → our place (match by ID, then open-data fuzzy match, then create) |
 | `push` | `pg_net` webhook on `notifications` insert, plus a cron sweep for retries | APNs alerts + Live Activity updates; quiet hours; sets `pushed_at` |
 | `invite-web` | Public HTTPS (`bigback.app/p/…`, `/d/…`) | Server-rendered RSVP and swipe pages for people without the app; writes guest RSVPs and votes with the service role, keyed by an unguessable code + guest token; Open-in-app banner |
 | `ai-ask` | App (Ask BigBack) | Haiku-tier Claude with read-only tools that call our RPCs as the user; returns place cards; rate-limited via `ai_requests` (§6) |
