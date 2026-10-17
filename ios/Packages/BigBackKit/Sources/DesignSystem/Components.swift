@@ -13,7 +13,7 @@ public struct PrimaryButtonStyle: ButtonStyle {
             .font(.headline)
             .frame(maxWidth: .infinity, minHeight: 54)
             .foregroundStyle(isEnabled ? Theme.onAccent : Color.secondary)
-            .background(isEnabled ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(.quaternary), in: Capsule())
+            .background(isEnabled ? AnyShapeStyle(Theme.accent) : AnyShapeStyle(HierarchicalShapeStyle.quaternary), in: Capsule())
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(Motion.snap, value: configuration.isPressed)
     }

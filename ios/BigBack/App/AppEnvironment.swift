@@ -1,7 +1,6 @@
 import Foundation
 import BigBackCore
 import BigBackData
-import Supabase
 
 /// Composition root: builds the live services once and hands them to the features.
 @MainActor
@@ -20,10 +19,10 @@ final class AppEnvironment {
         else {
             fatalError("SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY missing: check ios/Config/Supabase.xcconfig")
         }
-        let client = SupabaseClient(supabaseURL: url, supabaseKey: key)
-        session = SessionStore(client: client)
-        auth = SupabaseAuthService(client: client)
-        profiles = SupabaseProfileService(client: client)
+        let backend = LiveBackend(url: url, publishableKey: key)
+        session = backend.session
+        auth = backend.auth
+        profiles = backend.profiles
 
         let legalBase = (bundle.object(forInfoDictionaryKey: "LEGAL_BASE_URL") as? String).flatMap(URL.init(string:))
         legal = LegalLinks(base: legalBase ?? URL(string: "https://bigback.example")!)

@@ -21,7 +21,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Use the newest stable Xcode
         uses: maxim-lobanov/setup-xcode@v1
@@ -53,10 +53,15 @@ jobs:
       - name: Test BigBackKit (validation rules)
         working-directory: ios/Packages/BigBackKit
         run: |
+          set +e
           xcodebuild test \
             -scheme BigBackKit-Package \
             -destination "id=${{ steps.sim.outputs.udid }}" \
-            -skipMacroValidation -quiet
+            -skipMacroValidation > test.log 2>&1
+          status=$?
+          # Summary only: the test run line, any failed test and any compiler error.
+          grep -E "Test run with|✘|failed|error:" test.log || tail -n 40 test.log
+          exit $status
 
       - name: Build the app
         working-directory: ios

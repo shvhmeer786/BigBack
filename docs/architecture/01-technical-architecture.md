@@ -66,6 +66,8 @@ flowchart LR
 | Devices | iPhone XS / A12 and newer for simultaneous dual camera | Older phones fall back to quick sequential back-then-front capture, like BeReal. |
 
 ### 2.2 Targets and modules
+_Built so far (2026-10-17): the app target and `BigBackKit` with `BigBackCore`, `DesignSystem`, `BigBackData` and `Onboarding`. See `ios/README.md`. Extensions and the other feature modules come as those features are built._
+
 
 ```
 BigBack.xcodeproj
@@ -95,7 +97,7 @@ Each feature module depends on `Core`, `DesignSystem` and repository **protocols
 ### 2.3 State, navigation, dependency injection
 - **State:** one `@Observable` store per screen (`FeedStore`, `TonightStore`, `LiveMealStore`, `RateFlowStore`…), owned by the view with `@State`. The stores call repositories and expose plain values. No global mutable singletons except `AppSession` (auth state, current user, school).
 - **DI:** a `Dependencies` struct of repository protocols, passed through `@Environment(\.deps)`. Live, preview and test variants exist.
-- **Navigation:** a custom 5-tab bar (Feed · Tonight · ◉ Camera · Activity · You). Each tab is a `NavigationStack` driven by a typed `Route` enum. The camera, rate flow, Let's eat and plan creation are full-screen covers driven by an `AppRouter`.
+- **Navigation:** a native `TabView` with 4 tabs (Feed · Tonight · Activity · You); the camera is the Snap action in the tab bar accessory, per the design system §5. Each tab is a `NavigationStack` driven by a typed `Route` enum. The camera, rate flow, Let's eat and plan creation are full-screen covers driven by an `AppRouter`.
 - **Deep links:** universal links on `bigback.app`, all routed through `AppRouter` and the same routes:
   - `/p/{code}` plan
   - `/d/{code}` Let's eat
