@@ -1,0 +1,6 @@
+// App build settings. Supabase values live in Supabase.xcconfig.
+#include "Supabase.xcconfig"
+
+// Where privacy.html, terms.html, guidelines.html and support.html are hosted (see web/README.md).
+// Placeholder until the domain is bought. xcconfig treats "//" as a comment, so the scheme is split with $().
+LEGAL_BASE_URL = https:/$()/bigback.example

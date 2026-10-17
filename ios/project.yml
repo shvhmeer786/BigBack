@@ -1,0 +1,68 @@
+# XcodeGen spec. Generate the Xcode project with:  brew install xcodegen && xcodegen generate
+# The generated BigBack.xcodeproj and BigBack/Info.plist are not committed.
+name: BigBack
+options:
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # Set to the Apple Developer Team ID once the account exists.
+    DEVELOPMENT_TEAM: ""
+packages:
+  BigBackKit:
+    path: Packages/BigBackKit
+targets:
+  BigBack:
+    type: application
+    platform: iOS
+    sources:
+      - path: BigBack
+    configFiles:
+      Debug: Config/App.xcconfig
+      Release: Config/App.xcconfig
+    settings:
+      base:
+        # Bundle IDs can't change once the app exists in App Store Connect: confirm before the first upload.
+        PRODUCT_BUNDLE_IDENTIFIER: app.bigback.ios
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: BigBack/Info.plist
+      properties:
+        CFBundleDisplayName: BigBack
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        ITSAppUsesNonExemptEncryption: false
+        SUPABASE_URL: $(SUPABASE_URL)
+        SUPABASE_PUBLISHABLE_KEY: $(SUPABASE_PUBLISHABLE_KEY)
+        LEGAL_BASE_URL: $(LEGAL_BASE_URL)
+    dependencies:
+      - package: BigBackKit
+        product: BigBackCore
+      - package: BigBackKit
+        product: DesignSystem
+      - package: BigBackKit
+        product: BigBackData
+      - package: BigBackKit
+        product: Onboarding
+schemes:
+  BigBack:
+    build:
+      targets:
+        BigBack: all
+    run:
+      config: Debug
+    archive:
+      config: Release
