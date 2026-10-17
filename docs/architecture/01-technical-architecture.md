@@ -137,7 +137,7 @@ Each feature module depends on `Core`, `DesignSystem` and repository **protocols
 
 ### 2.6 Maps and location ("where is it, how far is it")
 - **Map UI:** SwiftUI `Map`, with `MKMapView` wrapped for clustering on the big map. Annotations are score badges coloured by tier; the user's location is shown with `UserAnnotation`.
-- **Search:** `MKLocalSearchCompleter` + `MKLocalSearch`, restricted with `MKPointOfInterestFilter` (restaurant, cafe, bakery, brewery, winery, foodMarket, nightlife). Results merge with our own `search_places` RPC (places friends have ranked rank first).
+- **Search:** `MKLocalSearchCompleter` + `MKLocalSearch`, restricted with `MKPointOfInterestFilter` (restaurant, cafe, bakery, brewery, winery, foodMarket, nightlife), anywhere in the world. Results get BigBack data from `place_signals` (friends' scores, campus score, saved) and merge with our own `search_places` RPC, so places friends have ranked come first (§5.0).
 - **Resolving a place:** when the user picks an Apple result that isn't in our DB yet, the app calls the `resolve_place` RPC with Apple's `MKMapItem.Identifier` and the on-device name and coordinate. The RPC:
   1. Matches an existing place by `apple_place_id`.
   2. Otherwise matches an existing place with a similar name (trigram) within 75 m, and links the Apple ID to it.
@@ -246,7 +246,7 @@ The iOS side codes against a `ReservationProvider` protocol (`.deepLink`, `.phon
 | `push` | `pg_net` webhook on `notifications` insert, plus a cron sweep for retries | APNs alerts + Live Activity updates; quiet hours; sets `pushed_at` |
 | `invite-web` | Public HTTPS (`bigback.app/p/…`, `/d/…`) | Server-rendered RSVP and swipe pages for people without the app; writes guest RSVPs and votes with the service role, keyed by an unguessable code + guest token; Open-in-app banner |
 | `ai-ask` | App (Ask BigBack) | Claude Haiku 5.5 with read-only tools that call our RPCs as the user; returns place cards; rate-limited via `ai_requests` (§6) |
-| `delete-account` | App | Deletes the user's Storage objects, then `auth.admin.deleteUser` (cascades to all owned rows), as App Store 5.1.1(v) requires |
+| `delete-account` | App | **Deployed and tested 2026-10-17.** Deletes the user's Storage objects in every bucket, then `auth.admin.deleteUser` (cascades to all owned rows), as App Store 5.1.1(v) requires. Body `{"confirm":"DELETE"}`; checks the user's token itself |
 | `reservations` | App (v1.x) | Provider-agnostic availability and booking (OpenTable partner API) |
 | `place-external` | App (optional, §5.3) | Live external rating for the place page; never stored |
 
@@ -288,6 +288,28 @@ Full rules: [design/01-core-experiences.md §C](../design/01-core-experiences.md
 
 The owner asked which open sources, maps and services we can use for real restaurants and reviews (Google, OpenTable, Resy, Yelp…), and whether to mix outside reviews with BigBack's own. Each source, with what we're allowed to do:
 
+### 5.0 How restaurants get into BigBack (owner decision 2026-10-17: no manual lists)
+Nobody types restaurants in. **The app searches Apple Maps on the phone (MapKit)**, which covers every restaurant
+Apple Maps knows: Waterloo, Toronto, New York, anywhere. It costs nothing, needs no API key, and Apple keeps the
+data (hours, photos, closures) current.
+
+1. **Search and browse:** `MKLocalSearch` / `MKLocalPointsOfInterestRequest` with a food filter (restaurant,
+   cafe, bakery, brewery, foodMarket, nightlife) around the user or wherever they're looking on the map.
+2. **Add BigBack's layer:** the app sends the results' Apple Place IDs to the `place_signals` RPC (up to 100 at a
+   time). It returns your score, how many people you follow went or loved it, the top friend's score, the UW
+   campus score, saved, and open-now. Places nobody on BigBack has touched come back without data and are shown
+   as plain map results.
+3. **Store only what people use:** a place enters our database the first time someone rates, saves, plans or
+   swipes on it (`resolve_place`, keyed by the Apple Place ID). The database grows on its own as students eat.
+4. **Tonight** ranks nearby MapKit results by those signals; **Let's eat** deals a deck from them (the app passes
+   their IDs as `constraints.place_ids` to `create_decide_session`).
+5. **Ask BigBack (AI)** needs to search on the server. That will use the **Apple Maps Server API** (same data,
+   needs the Apple Developer account, up to 25,000 calls a day free). Until then it ranks what the phone found
+   nearby plus places already in our database. Check Apple's terms on what can be sent to the AI before launch.
+
+Open data (Foursquare OS Places, Overture, OSM hours) becomes optional **enrichment** for places already in the
+database, such as hours where Apple's aren't available to us. It is never a hand-built list.
+
 ### 5.1 Sources
 
 | Source | What we get | What we may store | Cost | Use in BigBack |
@@ -301,7 +323,7 @@ The owner asked which open sources, maps and services we can use for real restau
 | **OpenTable** | Booking deep links; partner API for slots/booking | Restaurant IDs | Partner approval | Reserve button (v1) → in-app slots (v1.x) |
 | **Resy** | Deep links / widget; partner API (2026) _(verify)_ | Venue slugs | Partnership | Reserve button |
 
-**Getting data in:** Foursquare and Overture can't be downloaded from this build environment (its network policy blocks those hosts). The import will run from your machine, or from an Edge Function that streams the launch-region slice (Waterloo Region bounding box, Dining & Drinking categories) into `place_import`. Places are then promoted to `places` when someone ranks one, plus an admin-curated "Waterloo Starter Pack" of about 150 spots with hours and reservation links.
+**Getting data in:** see 5.0. Search is Apple Maps, live. Open data is optional enrichment only.
 
 ### 5.2 Should outside reviews be mixed with BigBack's? **Recommendation: no, keep them separate.**
 - BigBack's value is **honest, comparable rankings from people you know**. Averaging in Google's 4.3★ (stranger star inflation, a different scale, possibly years old) would weaken exactly what makes our numbers trustworthy, and licensing forbids blending Google data anyway.

@@ -203,6 +203,17 @@ begin
   assert r.score is not null, 'could not rate a place outside Waterloo';
   ok := array_append(ok, 'rank-anywhere');
 
+  -- ---------- Map results: signals for Apple IDs, and a Let's eat deck from map picks ----------
+  select count(*) into n from public.place_signals(array['apple-smoke-1', 'apple-never-seen']);
+  assert n = 2, 'place_signals should return one row per Apple ID';
+  assert (select my_score from public.place_signals(array['apple-smoke-1'])) = 9.5, 'place_signals my_score wrong';
+  assert (select place_id from public.place_signals(array['apple-never-seen'])) is null, 'unknown Apple ID should have no place';
+  v_session := public.create_decide_session(array[b], 43.4723, -80.5449, null,
+    jsonb_build_object('place_ids', jsonb_build_array(v_far)), 8);
+  assert exists (select 1 from public.decide_candidates where session_id = v_session and place_id = v_far),
+    'map pick missing from the Let''s eat deck';
+  ok := array_append(ok, 'map-results');
+
   -- ---------- Blocks ----------
   perform set_config('request.jwt.claims', json_build_object('sub', c, 'role', 'authenticated')::text, true);
   insert into public.blocks (blocker_id, blocked_id) values (c, a);

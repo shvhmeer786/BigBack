@@ -212,6 +212,7 @@ The last two answer only when the signed-in user is one of the two people (or th
 | `search_places(q, lat, lng, limit)` | rows | Trigram search, distance-aware |
 | `nearby_places(lat, lng, radius_m, limit)` | rows | Map viewport |
 | `resolve_place(apple_id, name, lat, lng, category, address, country, timezone)` | uuid | MapKit result → our place (Apple ID → nearby similar name → open-data promote → new user place, max 30 per day). Works anywhere; stores the place's country and time zone from MapKit |
+| `place_signals(apple_ids[])` | table | BigBack data for a list of Apple Maps results: your score, follows who went / loved it, top friend, campus score, saved, open now. Unknown IDs return no place. Lets the app rank live MapKit results without copying restaurants into the database |
 | `predicted_score(place, user)` | numeric | Similarity-weighted, shrunk to the campus score (k = 2) |
 | `submit_rating(...)`, `rerate_visit(...)`, `move_ranking(...)`, `record_comparison(...)` | | Ranking engine |
 | `tag_friends(meal, users[])`, `respond_party_invite(party, accept)`, `join_party(code)` | | Eating together |

@@ -23,13 +23,14 @@ _Updated 2026-10-15. Everything in `supabase/migrations/` is applied; file names
 | `20261015155311_advisor_fixes` | Follow/block helpers answer only about the caller; nothing privileged is callable signed-out; every foreign key indexed |
 | `20261015173756_ai_model_haiku_5_5` | `app_config.ai.model` = `claude-haiku-5-5` |
 | `20261015180634_auth_onboarding` | Terms acceptance columns, `is_handle_available`, `complete_onboarding`, `accept_terms`; guard protects `onboarded_at`, terms and `is_demo` |
+| `20261017191011_places_from_maps` | `place_signals` for Apple Maps results; Let's eat accepts map picks (`constraints.place_ids`) |
 
 ## Smoke test: passing
-`supabase/tests/smoke_test.sql` runs as three fake UW students and always rolls back. Last run (2026-10-15) passed
-all 21 checks:
+`supabase/tests/smoke_test.sql` runs as three fake UW students and always rolls back. Last run (2026-10-17) passed
+all 22 checks:
 
 `profiles+school, onboarding, first-rating=9.0, binary-insert+rescore, tier-bands, meal-guard, rankings-rls, move_ranking,
-feed+friend_went, private-profiles, party+tagging, lets-eat, plans+rsvp, reads, resolve_place, rank-anywhere,
+feed+friend_went, private-profiles, party+tagging, lets-eat, plans+rsvp, reads, resolve_place, rank-anywhere, map-results,
 blocks, privacy-helpers, jobs, local-hours, signup-uw-only`
 
 ## Advisors (2026-10-15, after `advisor_fixes`)
@@ -41,6 +42,11 @@ blocks, privacy-helpers, jobs, local-hours, signup-uw-only`
   - `ai_requests` and `place_import` have RLS with no policies. They are server-only, so clients get nothing.
   - "Signed-in users can execute SECURITY DEFINER function" lists the app's own RPCs (`submit_rating`, `get_feed`, …). Each one checks `auth.uid()` itself.
   - "Unused index" findings appear because there's no traffic yet.
+
+## Edge Functions
+| Function | Status |
+|---|---|
+| `delete-account` | Deployed 2026-10-17 (`supabase/functions/delete-account`). Tested end to end through `pg_net`: no token → 401, no confirmation → 400, a real test account with two files (one in a sub-folder) → 200, with the user, profile and files all gone. |
 
 ## Clean-up for later (SQL editor)
 - `drop function public._resolve_place_v1(text, text, double precision, double precision, text, text);`. It's the
