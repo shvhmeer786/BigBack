@@ -19,6 +19,14 @@ follow. Launching at the University of Waterloo.
 | Database status / migration log | [docs/handoff/db-status.md](docs/handoff/db-status.md) |
 | Clickable prototype (source) | [prototype/Main.dc.html](prototype/Main.dc.html) · design board [prototype/DesignSystem.dc.html](prototype/DesignSystem.dc.html) |
 
+## Code
+| | |
+|---|---|
+| iPhone app (SwiftUI, iOS 18+) | [ios/](ios/README.md): sign up / log in, profile setup, tab shell; CI builds every push |
+| Database | [supabase/](supabase/README.md): migrations, smoke test, generated types, email templates |
+| Server functions | `supabase/functions/` (`delete-account` is deployed) |
+| Public pages | [web/](web/README.md): privacy policy, terms, community guidelines, support (drafts) |
+
 ## Backend
 | | |
 |---|---|
@@ -27,7 +35,7 @@ follow. Launching at the University of Waterloo.
 | API URL | `https://iefchnylrxolydtulmgt.supabase.co` |
 | Client key | Publishable key in `ios/Config/Supabase.xcconfig` |
 | Migrations | `supabase/migrations/` (all applied; see [supabase/README.md](supabase/README.md)) |
-| Smoke test | `supabase/tests/smoke_test.sql` (21 checks, passing) |
+| Smoke test | `supabase/tests/smoke_test.sql` (22 checks, passing) |
 | Sign-up | `@uwaterloo.ca` only at launch, by emailed 6-digit code; students can rank restaurants anywhere |
 | Email templates | `supabase/templates/` (sign-up and log-in codes) |
 
